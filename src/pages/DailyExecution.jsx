@@ -13,7 +13,7 @@ export default function DailyExecution() {
   const { data: clients, isLoading: cLoading } = useQuery({ queryKey: ['clients'], queryFn: () => base44.entities.Client.list() });
 
   if (pLoading || phLoading || tLoading || cLoading) {
-    return <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-purple-500" /></div>;
+    return <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-emerald-500" /></div>;
   }
 
   const openTasks = tasks?.filter(t => !t.is_completed) || [];
@@ -36,21 +36,21 @@ export default function DailyExecution() {
 
   return (
     <div>
-      <header className="flex justify-between items-end mb-8">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-50 mb-2">ביצוע יומי</h1>
-          <p className="text-zinc-400">ניהול משימות רוחבי לכלל הפרויקטים</p>
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">ביצוע יומי</h1>
+          <p className="text-slate-500">ניהול משימות רוחבי לכלל הפרויקטים</p>
         </div>
-        <div className="flex bg-zinc-900 rounded-lg p-1 border border-zinc-800">
+        <div className="flex bg-white rounded-xl p-1 border border-slate-200 shadow-sm w-full md:w-auto">
           <button 
             onClick={() => setView('list')}
-            className={`p-2 rounded-md transition-colors ${view === 'list' ? 'bg-zinc-800 text-purple-400' : 'text-zinc-500 hover:text-slate-300'}`}
+            className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'list' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`}
           >
             <LayoutList className="w-5 h-5" />
           </button>
           <button 
             onClick={() => setView('kanban')}
-            className={`p-2 rounded-md transition-colors ${view === 'kanban' ? 'bg-zinc-800 text-purple-400' : 'text-zinc-500 hover:text-slate-300'}`}
+            className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'kanban' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`}
           >
             <KanbanSquare className="w-5 h-5" />
           </button>
@@ -58,7 +58,7 @@ export default function DailyExecution() {
       </header>
 
       {view === 'list' ? (
-        <div className="space-y-3 max-w-4xl">
+        <div className="space-y-4 max-w-4xl">
           {sortedTasks.map(task => (
             <TaskItem 
               key={task.id} 
@@ -69,7 +69,7 @@ export default function DailyExecution() {
             />
           ))}
           {sortedTasks.length === 0 && (
-            <div className="text-center py-12 text-zinc-500">אין משימות פתוחות! 🎉</div>
+            <div className="text-center py-12 text-slate-500 bg-white rounded-2xl border border-slate-200 border-dashed shadow-sm">אין משימות פתוחות! 🎉</div>
           )}
         </div>
       ) : (
@@ -77,15 +77,16 @@ export default function DailyExecution() {
           {['high', 'medium', 'low'].map(priority => {
             const priorityTasks = sortedTasks.filter(t => t.priority === priority);
             const titles = { high: 'עדיפות גבוהה', medium: 'עדיפות בינונית', low: 'עדיפות נמוכה' };
-            const colors = { high: 'border-red-500/30', medium: 'border-yellow-500/30', low: 'border-blue-500/30' };
+            const colors = { high: 'border-red-200 text-red-700', medium: 'border-amber-200 text-amber-700', low: 'border-cyan-200 text-cyan-700' };
+            const bgColors = { high: 'bg-red-50/50', medium: 'bg-amber-50/50', low: 'bg-cyan-50/50' };
             
             return (
-              <div key={priority} className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800 flex flex-col h-[calc(100vh-200px)]">
-                <h3 className={`font-bold mb-4 pb-2 border-b ${colors[priority]} flex justify-between items-center`}>
+              <div key={priority} className={`bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col h-[calc(100vh-200px)] shadow-sm`}>
+                <h3 className={`font-bold mb-4 pb-3 border-b ${colors[priority]} flex justify-between items-center`}>
                   <span>{titles[priority]}</span>
-                  <span className="bg-zinc-800 text-xs px-2 py-1 rounded-full">{priorityTasks.length}</span>
+                  <span className="bg-white shadow-sm text-xs px-2.5 py-1 rounded-full border border-slate-100">{priorityTasks.length}</span>
                 </h3>
-                <div className="space-y-3 overflow-y-auto pr-2 flex-1 custom-scrollbar">
+                <div className="space-y-3 overflow-y-auto pr-1 flex-1 custom-scrollbar pb-4">
                   {priorityTasks.map(task => (
                     <TaskItem 
                       key={task.id} 
