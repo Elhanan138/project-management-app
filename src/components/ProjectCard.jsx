@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Calendar, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 
-export default function ProjectCard({ project, phases, tasks }) {
+export default function ProjectCard({ project, phases, tasks, client }) {
   // Calculate progress based on tasks
   const projectTasks = tasks.filter(t => t.project_id === project.id);
   const completedTasks = projectTasks.filter(t => t.is_completed).length;
@@ -21,7 +21,7 @@ export default function ProjectCard({ project, phases, tasks }) {
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="text-xl font-bold text-slate-50 mb-1 group-hover:text-purple-400 transition-colors">
-              {project.client_name}
+              {project.name || client?.name || project.client_name || 'פרויקט ללא שם'}
             </h3>
             <div className="flex items-center gap-2 text-sm text-zinc-400">
               <Calendar className="w-4 h-4" />
