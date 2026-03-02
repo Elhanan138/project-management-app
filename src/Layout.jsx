@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { LayoutDashboard, CheckSquare, Briefcase } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Briefcase, Users } from 'lucide-react';
 
 export default function Layout({ children, currentPageName }) {
   useEffect(() => {
@@ -12,6 +12,8 @@ export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: 'Home', label: 'דשבורד ראשי', icon: LayoutDashboard },
     { name: 'DailyExecution', label: 'ביצוע יומי', icon: CheckSquare },
+    { name: 'Clients', label: 'לקוחות', icon: Users },
+    { name: 'Tasks', label: 'ניהול משימות', icon: CheckSquare },
   ];
 
   return (
