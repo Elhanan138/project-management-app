@@ -50,6 +50,8 @@
 import Home from './pages/Home';
 import DailyExecution from './pages/DailyExecution';
 import ProjectDetails from './pages/ProjectDetails';
+import Clients from './pages/Clients';
+import Tasks from './pages/Tasks';
 import __Layout from './Layout.jsx';
 
 
@@ -57,6 +59,8 @@ export const PAGES = {
     "Home": Home,
     "DailyExecution": DailyExecution,
     "ProjectDetails": ProjectDetails,
+    "Clients": Clients,
+    "Tasks": Tasks,
 }
 
 export const pagesConfig = {
