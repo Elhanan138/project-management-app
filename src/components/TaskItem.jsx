@@ -3,7 +3,7 @@ import { CheckCircle2, Clock, AlertCircle, Flag } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export default function TaskItem({ task, project, phase }) {
+export default function TaskItem({ task, project, phase, client }) {
   const queryClient = useQueryClient();
   
   const toggleTaskMutation = useMutation({
@@ -46,7 +46,7 @@ export default function TaskItem({ task, project, phase }) {
           
           <div className="flex flex-wrap items-center gap-2 text-xs mb-3">
             <span className="text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded">
-              {project?.client_name}
+              {project?.name || client?.name || project?.client_name || 'פרויקט'}
             </span>
             <span className="text-zinc-500">•</span>
             <span className="text-zinc-400">
