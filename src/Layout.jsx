@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { LayoutDashboard, CheckSquare, Briefcase, Users } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Briefcase, Users, Menu, X } from 'lucide-react';
 
 export default function Layout({ children, currentPageName }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   useEffect(() => {
     document.documentElement.dir = 'rtl';
-    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('dark');
   }, []);
 
   const navItems = [
@@ -17,16 +19,35 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-slate-50 font-sans rtl">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans rtl">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-white border-b border-slate-200 p-4 flex justify-between items-center sticky top-0 z-40 shadow-sm">
+        <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2">
+          <Briefcase className="w-6 h-6" />
+          Blossom LMS
+        </h1>
+        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-slate-600 p-2">
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="fixed top-0 right-0 w-64 h-screen bg-zinc-900 border-l border-zinc-800 flex flex-col">
-        <div className="p-6 border-b border-zinc-800">
-          <h1 className="text-xl font-bold text-purple-400 flex items-center gap-2">
+      <aside className={`fixed top-0 right-0 w-64 h-screen bg-white border-l border-slate-200 flex flex-col z-50 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:translate-x-0 shadow-lg md:shadow-none`}>
+        <div className="p-6 border-b border-slate-200 hidden md:block">
+          <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2">
             <Briefcase className="w-6 h-6" />
-            LMS Tracker
+            Blossom LMS
           </h1>
         </div>
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = currentPageName === item.name;
             const Icon = item.icon;
@@ -34,14 +55,15 @@ export default function Layout({ children, currentPageName }) {
               <Link
                 key={item.name}
                 to={createPageUrl(item.name)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                   isActive
-                    ? 'bg-purple-600/20 text-purple-400'
-                    : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
+                    ? 'bg-emerald-50 text-emerald-600 font-semibold shadow-sm'
+                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                 }`}
               >
                 <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
+                <span>{item.label}</span>
               </Link>
             );
           })}
@@ -49,7 +71,7 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Main Content */}
-      <main className="mr-64 p-8">
+      <main className="md:mr-64 p-4 md:p-8 pt-6">
         <div className="max-w-7xl mx-auto">
           {children}
         </div>
