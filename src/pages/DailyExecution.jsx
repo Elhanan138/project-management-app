@@ -10,8 +10,9 @@ export default function DailyExecution() {
   const { data: projects, isLoading: pLoading } = useQuery({ queryKey: ['projects'], queryFn: () => base44.entities.Project.list() });
   const { data: phases, isLoading: phLoading } = useQuery({ queryKey: ['phases'], queryFn: () => base44.entities.Phase.list() });
   const { data: tasks, isLoading: tLoading } = useQuery({ queryKey: ['tasks'], queryFn: () => base44.entities.Task.list() });
+  const { data: clients, isLoading: cLoading } = useQuery({ queryKey: ['clients'], queryFn: () => base44.entities.Client.list() });
 
-  if (pLoading || phLoading || tLoading) {
+  if (pLoading || phLoading || tLoading || cLoading) {
     return <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-purple-500" /></div>;
   }
 
@@ -28,6 +29,10 @@ export default function DailyExecution() {
 
   const getProject = (id) => projects?.find(p => p.id === id);
   const getPhase = (id) => phases?.find(p => p.id === id);
+  const getClient = (projectId) => {
+    const project = getProject(projectId);
+    return clients?.find(c => c.id === project?.client_id);
+  };
 
   return (
     <div>
@@ -60,6 +65,7 @@ export default function DailyExecution() {
               task={task} 
               project={getProject(task.project_id)} 
               phase={getPhase(task.phase_id)} 
+              client={getClient(task.project_id)}
             />
           ))}
           {sortedTasks.length === 0 && (
@@ -86,6 +92,7 @@ export default function DailyExecution() {
                       task={task} 
                       project={getProject(task.project_id)} 
                       phase={getPhase(task.phase_id)} 
+                      client={getClient(task.project_id)}
                     />
                   ))}
                 </div>
