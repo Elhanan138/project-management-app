@@ -7,27 +7,27 @@ export default function ProgressStepper({ phases }) {
 
   return (
     <div className="w-full py-6">
-      <div className="flex items-center justify-between relative">
+      <div className="flex items-center justify-between relative min-w-[500px]">
         {/* Connecting Line */}
-        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1 bg-zinc-800 -z-10" />
+        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1 bg-slate-200 -z-10" />
         
         {sortedPhases.map((phase, index) => {
           const isCompleted = phase.status === 'completed';
           const isInProgress = phase.status === 'in_progress';
           const isLate = phase.status === 'late';
           
-          let bgColor = 'bg-zinc-900 border-zinc-700';
-          let textColor = 'text-zinc-500';
+          let bgColor = 'bg-white border-slate-300 text-slate-500';
+          let textColor = 'text-slate-400';
           
           if (isCompleted) {
-            bgColor = 'bg-green-500 border-green-500 text-white';
-            textColor = 'text-green-500';
+            bgColor = 'bg-emerald-500 border-emerald-500 text-white';
+            textColor = 'text-emerald-600 font-medium';
           } else if (isInProgress) {
-            bgColor = 'bg-purple-500 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]';
-            textColor = 'text-purple-400 font-bold';
+            bgColor = 'bg-cyan-400 border-cyan-400 text-white shadow-md shadow-cyan-400/30';
+            textColor = 'text-cyan-600 font-bold';
           } else if (isLate) {
-            bgColor = 'bg-red-500 border-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.5)]';
-            textColor = 'text-red-400 font-bold';
+            bgColor = 'bg-red-500 border-red-500 text-white shadow-md shadow-red-500/30';
+            textColor = 'text-red-600 font-bold';
           }
 
           return (
