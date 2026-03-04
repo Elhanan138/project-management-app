@@ -111,7 +111,7 @@ export default function Clients() {
         </button>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {isEditing === 'new' && (
           <div className="bg-white border border-emerald-200 rounded-2xl p-6 shadow-md lg:col-span-2">
             <h2 className="text-lg font-bold text-slate-800 mb-4">יצירת לקוח ופרויקט חדש</h2>
@@ -152,44 +152,42 @@ export default function Clients() {
                 </div>
               </div>
             ) : (
-              <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="block p-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">
-                    {client.name}
-                  </span>
-                  <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsEditing(client.id);
-                        setFormData({
-                          client_id: client.id,
-                          client_name: client.name,
-                          contact_person: client.contact_person,
-                          email: client.email,
-                          phone: client.phone,
-                          project_id: project?.id,
-                          start_date: project?.start_date,
-                          target_date: project?.target_date,
-                          purchased_modules: project?.purchased_modules || []
-                        });
-                      }}
-                      className="text-slate-400 hover:text-emerald-500 p-2 hover:bg-white/80 rounded-xl transition-colors"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        deleteClientMutation.mutate(client.id);
-                      }}
-                      className="text-slate-400 hover:text-red-500 p-2 hover:bg-white/80 rounded-xl transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
+              <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="block aspect-square p-4 flex flex-col items-center justify-center text-center relative">
+                <span className="text-base font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">
+                  {client.name}
+                </span>
+                <div className="absolute top-2 left-2 flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsEditing(client.id);
+                      setFormData({
+                        client_id: client.id,
+                        client_name: client.name,
+                        contact_person: client.contact_person,
+                        email: client.email,
+                        phone: client.phone,
+                        project_id: project?.id,
+                        start_date: project?.start_date,
+                        target_date: project?.target_date,
+                        purchased_modules: project?.purchased_modules || []
+                      });
+                    }}
+                    className="text-slate-400 hover:text-emerald-500 p-1.5 hover:bg-white/80 rounded-lg transition-colors"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      deleteClientMutation.mutate(client.id);
+                    }}
+                    className="text-slate-400 hover:text-red-500 p-1.5 hover:bg-white/80 rounded-lg transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </Link>
             )}
