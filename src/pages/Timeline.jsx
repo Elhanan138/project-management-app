@@ -124,7 +124,7 @@ export default function Timeline() {
               <div className="absolute -right-[35px] top-4 w-4 h-4 rounded-full bg-emerald-500 border-4 border-white shadow-sm" />
               
               <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all hover:border-emerald-300">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-3">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div>
                     <h3 className="text-lg font-bold text-slate-800">{phase.name}</h3>
                     <p className="text-emerald-600 font-medium">{clientName}</p>
@@ -137,17 +137,6 @@ export default function Timeline() {
                       <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500 p-1.5 bg-slate-50 rounded-lg"><Edit2 className="w-4 h-4" /></button>
                       <button onClick={() => deleteMutation.mutate(phase.id)} className="text-slate-400 hover:text-red-500 p-1.5 bg-slate-50 rounded-lg"><Trash2 className="w-4 h-4" /></button>
                     </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4 text-sm text-slate-500">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" />
-                    <span>התחלה: {new Date(phase.start_date).toLocaleDateString('he-IL')}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" />
-                    <span>סיום צפוי: {new Date(phase.expected_end_date).toLocaleDateString('he-IL')}</span>
                   </div>
                 </div>
               </div>
@@ -169,8 +158,6 @@ export default function Timeline() {
                 <th className="p-4 font-medium">שם השלב</th>
                 <th className="p-4 font-medium">לקוח</th>
                 <th className="p-4 font-medium">סטטוס</th>
-                <th className="p-4 font-medium">התחלה</th>
-                <th className="p-4 font-medium">סיום צפוי</th>
                 <th className="p-4 font-medium w-24">פעולות</th>
               </tr>
             </thead>
@@ -184,8 +171,6 @@ export default function Timeline() {
                     <td className="p-4 text-slate-800 font-medium cursor-pointer hover:text-emerald-600" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>{phase.name}</td>
                     <td className="p-4 text-slate-500">{clientName}</td>
                     <td className="p-4"><span className={`px-2.5 py-1 rounded-md text-xs border ${statusColors[phase.status]}`}>{statusLabels[phase.status]}</span></td>
-                    <td className="p-4 text-slate-500">{new Date(phase.start_date).toLocaleDateString('he-IL')}</td>
-                    <td className="p-4 text-slate-500">{new Date(phase.expected_end_date).toLocaleDateString('he-IL')}</td>
                     <td className="p-4">
                       <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500"><Edit2 className="w-4 h-4" /></button>
@@ -224,11 +209,7 @@ export default function Timeline() {
                           <h4 className="font-semibold text-slate-900 text-sm leading-tight">{phase.name}</h4>
                           <button onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(phase.id); }} className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"><Trash2 className="w-3.5 h-3.5" /></button>
                         </div>
-                        <p className="text-slate-500 text-xs font-medium mb-3">{clientName}</p>
-                        <div className="flex flex-col gap-1.5 text-[11px] text-slate-500 bg-slate-50 p-2 rounded-md">
-                          <div className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> התחלה: {new Date(phase.start_date).toLocaleDateString('he-IL')}</div>
-                          <div className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> יעד: {new Date(phase.expected_end_date).toLocaleDateString('he-IL')}</div>
-                        </div>
+                        <p className="text-slate-500 text-xs font-medium">{clientName}</p>
                       </div>
                     );
                   })}
