@@ -101,12 +101,16 @@ export default function ProjectDetails() {
               <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> יעד: {new Date(project.target_date).toLocaleDateString('he-IL')}</span>
             </div>
           </div>
-          <ModulesEditorInline
-            modules={project.purchased_modules || []}
-            projectId={project.id}
-          />
+          <div className="w-full md:w-auto">
+            <p className="text-xs font-medium text-slate-400 mb-2">מודולים שנרכשו</p>
+            <ModulesEditorInline
+              modules={project.purchased_modules || []}
+              projectId={project.id}
+            />
+          </div>
         </div>
 
+        <div className="border-t border-slate-100 pt-6 mt-2"></div>
         <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-6">
           <div className="overflow-x-auto">
             <ProgressStepper phases={sortedPhases} />
