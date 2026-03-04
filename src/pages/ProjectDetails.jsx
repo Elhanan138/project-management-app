@@ -65,9 +65,20 @@ export default function ProjectDetails() {
     onSuccess: () => queryClient.invalidateQueries(['phases', projectId])
   });
 
+  // Calculate duration from start/end times
+  const calcDuration = (start, end) => {
+    if (!start || !end) return 0;
+    const [sh, sm] = start.split(':').map(Number);
+    const [eh, em] = end.split(':').map(Number);
+    const diff = (eh * 60 + em) - (sh * 60 + sm);
+    return diff > 0 ? Math.round(diff / 30) * 0.5 : 0;
+  };
+
   const handleSavePhase = () => {
-    if (isEditingPhase === 'new') createPhaseMutation.mutate(phaseFormData);
-    else updatePhaseMutation.mutate({ id: isEditingPhase, data: phaseFormData });
+    const duration = calcDuration(phaseFormData.meeting_start_time, phaseFormData.meeting_end_time);
+    const dataToSave = { ...phaseFormData, duration_hours: duration || phaseFormData.duration_hours || 0 };
+    if (isEditingPhase === 'new') createPhaseMutation.mutate(dataToSave);
+    else updatePhaseMutation.mutate({ id: isEditingPhase, data: dataToSave });
   };
 
   if (pLoading || phLoading || tLoading) {
