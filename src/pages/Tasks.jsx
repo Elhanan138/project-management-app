@@ -15,21 +15,25 @@ export default function Tasks() {
 
   const syncPhaseStatus = async (phaseId) => {
     if (!phaseId) return;
-    const phaseTasks = await base44.entities.Task.filter({ phase_id: phaseId });
-    if (phaseTasks.length === 0) return;
-    const allCompleted = phaseTasks.every(t => t.is_completed);
-    const anyCompleted = phaseTasks.some(t => t.is_completed);
-    const phase = await base44.entities.Phase.get(phaseId);
-    if (!phase) return;
-    
-    let newStatus = phase.status;
-    if (allCompleted) newStatus = 'completed';
-    else if (anyCompleted && phase.status === 'not_started') newStatus = 'in_progress';
-    else if (!allCompleted && phase.status === 'completed') newStatus = 'in_progress';
-    
-    if (newStatus !== phase.status) {
-      await base44.entities.Phase.update(phaseId, { status: newStatus });
-      queryClient.invalidateQueries(['phases']);
+    try {
+      const phaseTasks = await base44.entities.Task.filter({ phase_id: phaseId });
+      if (phaseTasks.length === 0) return;
+      const allCompleted = phaseTasks.every(t => t.is_completed);
+      const anyCompleted = phaseTasks.some(t => t.is_completed);
+      const phase = await base44.entities.Phase.get(phaseId);
+      if (!phase) return;
+      
+      let newStatus = phase.status;
+      if (allCompleted) newStatus = 'completed';
+      else if (anyCompleted && phase.status === 'not_started') newStatus = 'in_progress';
+      else if (!allCompleted && phase.status === 'completed') newStatus = 'in_progress';
+      
+      if (newStatus !== phase.status) {
+        await base44.entities.Phase.update(phaseId, { status: newStatus });
+        queryClient.invalidateQueries(['phases']);
+      }
+    } catch (error) {
+      console.error("Error syncing phase status:", error);
     }
   };
 
