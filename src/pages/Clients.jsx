@@ -111,17 +111,27 @@ export default function Clients() {
         </button>
       </header>
 
-      {/* מודאל עריכת לקוח */}
-      {isEditing && isEditing !== 'new' && (
-        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold text-slate-800 mb-4">עריכת לקוח ופרויקט</h2>
-            <ClientForm formData={formData} setFormData={setFormData} />
-            <div className="flex gap-2 pt-6 mt-4 border-t">
-              <button onClick={handleSave} className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl flex items-center gap-2 transition-colors">
-                <Save className="w-4 h-4" /> שמור
+      {/* מודאל יצירה/עריכה */}
+      {isEditing && (
+        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-end md:items-center justify-center" onClick={() => setIsEditing(null)}>
+          <div 
+            className="bg-white rounded-t-2xl md:rounded-2xl p-5 md:p-6 w-full max-w-lg shadow-xl max-h-[85vh] overflow-y-auto"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold text-slate-800">
+                {isEditing === 'new' ? 'לקוח ופרויקט חדש' : 'עריכת לקוח ופרויקט'}
+              </h2>
+              <button onClick={() => setIsEditing(null)} className="text-slate-400 hover:text-slate-600 p-1">
+                <X className="w-5 h-5" />
               </button>
-              <button onClick={() => setIsEditing(null)} className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2 rounded-xl flex items-center gap-2 transition-colors">
+            </div>
+            <ClientForm formData={formData} setFormData={setFormData} />
+            <div className="flex gap-2 pt-5 mt-4 border-t">
+              <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium">
+                <Save className="w-4 h-4" /> {isEditing === 'new' ? 'שמור הכל' : 'שמור'}
+              </button>
+              <button onClick={() => setIsEditing(null)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium">
                 <X className="w-4 h-4" /> בטל
               </button>
             </div>
@@ -130,20 +140,7 @@ export default function Clients() {
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {isEditing === 'new' && (
-          <div className="bg-white border border-emerald-200 rounded-2xl p-6 shadow-md lg:col-span-2">
-            <h2 className="text-lg font-bold text-slate-800 mb-4">יצירת לקוח ופרויקט חדש</h2>
-            <ClientForm formData={formData} setFormData={setFormData} />
-            <div className="flex gap-2 pt-6 mt-4 border-t">
-              <button onClick={handleSave} className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl flex items-center gap-2 transition-colors">
-                <Save className="w-4 h-4" /> שמור הכל
-              </button>
-              <button onClick={() => setIsEditing(null)} className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2 rounded-xl flex items-center gap-2 transition-colors">
-                <X className="w-4 h-4" /> בטל
-              </button>
-            </div>
-          </div>
-        )}
+        {
 
         {orphanedProjects.map(project => (
           <div key={`orphan-${project.id}`} className="bg-amber-50 border border-amber-200 rounded-xl p-6 shadow-sm">
