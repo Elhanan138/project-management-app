@@ -138,7 +138,7 @@ export default function Clients() {
         ))}
 
         {combinedData.map(({ client, project }) => (
-          <div key={client.id} className="bg-white border border-slate-200 rounded-2xl hover:border-emerald-200 hover:shadow-lg transition-all duration-300 shadow-sm group overflow-hidden">
+          <div key={client.id} className="bg-gradient-to-bl from-white via-white to-emerald-50/40 border border-slate-200/60 rounded-2xl shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_30px_-8px_rgba(16,185,129,0.15)] hover:border-emerald-200/60 transition-all duration-300 group overflow-hidden">
             {isEditing === client.id ? (
               <div className="p-6 space-y-6">
                 <ClientForm formData={formData} setFormData={setFormData} />
@@ -154,14 +154,9 @@ export default function Clients() {
             ) : (
               <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="block p-6">
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold text-lg flex-shrink-0">
-                      {client.name?.charAt(0) || '?'}
-                    </div>
-                    <span className="text-lg font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">
-                      {client.name}
-                    </span>
-                  </div>
+                  <span className="text-lg font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">
+                    {client.name}
+                  </span>
                   <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={(e) => {
@@ -180,7 +175,7 @@ export default function Clients() {
                           purchased_modules: project?.purchased_modules || []
                         });
                       }}
-                      className="text-slate-400 hover:text-emerald-500 p-2 bg-slate-50 hover:bg-emerald-50 rounded-xl transition-colors"
+                      className="text-slate-400 hover:text-emerald-500 p-2 hover:bg-white/80 rounded-xl transition-colors"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
@@ -190,7 +185,7 @@ export default function Clients() {
                         e.stopPropagation();
                         deleteClientMutation.mutate(client.id);
                       }}
-                      className="text-slate-400 hover:text-red-500 p-2 bg-slate-50 hover:bg-red-50 rounded-xl transition-colors"
+                      className="text-slate-400 hover:text-red-500 p-2 hover:bg-white/80 rounded-xl transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
