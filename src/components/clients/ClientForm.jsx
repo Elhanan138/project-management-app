@@ -53,30 +53,8 @@ const ModulesEditor = ({ selected = [], onChange }) => {
         <>
           <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
           <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 max-h-72 overflow-y-auto py-1">
-            {allOptions.map(option => (
-              <div key={option} className="flex items-center justify-between px-4 py-2 hover:bg-slate-50 transition-colors group/item">
-                <label className="flex items-center gap-3 cursor-pointer flex-1">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 accent-emerald-500 rounded border-slate-300"
-                    checked={selected.includes(option)}
-                    onChange={() => toggleOption(option)}
-                    onClick={e => e.stopPropagation()}
-                  />
-                  <span className="text-sm text-slate-700">{option}</span>
-                </label>
-                {!DEFAULT_MODULES.includes(option) && (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); removeModule(option); }}
-                    className="text-slate-300 hover:text-red-400 opacity-0 group-hover/item:opacity-100 transition-opacity p-0.5"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </div>
-            ))}
-            <div className="border-t border-slate-100 mt-1 pt-1 px-3 pb-2">
-              <div className="flex gap-2 mt-1">
+            <div className="px-3 pt-2 pb-1">
+              <div className="flex gap-2">
                 <input
                   type="text"
                   placeholder="הוסף מודול חדש..."
@@ -93,6 +71,28 @@ const ModulesEditor = ({ selected = [], onChange }) => {
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
+            </div>
+            <div className="border-t border-slate-100 mt-1">
+              {allOptions.map(option => (
+                <div key={option} className="flex items-center justify-between px-4 py-2 hover:bg-slate-50 transition-colors group/item">
+                  <label className="flex items-center gap-3 cursor-pointer flex-1">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 accent-emerald-500 rounded border-slate-300"
+                      checked={selected.includes(option)}
+                      onChange={() => toggleOption(option)}
+                      onClick={e => e.stopPropagation()}
+                    />
+                    <span className="text-sm text-slate-700">{option}</span>
+                  </label>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); removeModule(option); }}
+                    className="text-slate-300 hover:text-red-400 opacity-0 group-hover/item:opacity-100 transition-opacity p-0.5"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </>
@@ -162,7 +162,7 @@ export default function ClientForm({ formData, setFormData }) {
           </div>
         </div>
         <div className="space-y-1">
-          <label className="block text-xs text-slate-500">מודולים נרכשים</label>
+          <label className="block text-xs text-slate-500">מודולים שנרכשו</label>
           <ModulesEditor
             selected={Array.isArray(formData.purchased_modules) ? formData.purchased_modules : []}
             onChange={val => setFormData(prev => ({ ...prev, purchased_modules: val }))}

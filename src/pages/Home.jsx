@@ -74,7 +74,7 @@ export default function Home() {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-1">דשבורד פרויקטים</h1>
-          <p className="text-slate-500 text-sm">מבט על לכלל הטמעות ה-LMS הפעילות</p>
+
         </div>
 
       </header>
