@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit2, Trash2, Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Edit2, Trash2, Calendar, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 
 const statusConfig = {
   completed: { color: 'bg-emerald-500', border: 'border-emerald-200', text: 'text-emerald-700', bg: 'bg-emerald-50', label: 'הושלם' },
@@ -33,6 +33,12 @@ export function TimelineView({ phases, tasks, onEdit, onDelete, onStatusChange }
                       פגישה: {new Date(phase.meeting_date).toLocaleDateString('he-IL')}
                     </p>
                   )}
+                  {phase.duration_hours > 0 && (
+                    <p className="text-sm text-slate-500 flex items-center gap-1.5 mt-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      {phase.duration_hours} שעות
+                    </p>
+                  )}
                   {phaseTasks.length > 0 && (
                     <p className="text-xs text-slate-400 mt-1">{completedTasks}/{phaseTasks.length} משימות הושלמו</p>
                   )}
@@ -64,6 +70,7 @@ export function TableView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
             <th className="px-4 py-3 font-medium">שלב</th>
             <th className="px-4 py-3 font-medium">סטטוס</th>
             <th className="px-4 py-3 font-medium">תאריך פגישה</th>
+            <th className="px-4 py-3 font-medium">שעות</th>
             <th className="px-4 py-3 font-medium">משימות</th>
             <th className="px-4 py-3 font-medium w-20">פעולות</th>
           </tr>
@@ -82,6 +89,7 @@ export function TableView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
                 <td className="px-4 py-3 text-sm text-slate-500">
                   {phase.meeting_date ? new Date(phase.meeting_date).toLocaleDateString('he-IL') : '-'}
                 </td>
+                <td className="px-4 py-3 text-sm text-slate-500">{phase.duration_hours || 0}</td>
                 <td className="px-4 py-3 text-sm text-slate-500">{completedTasks}/{phaseTasks.length}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -128,9 +136,15 @@ export function CardsView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
               </div>
             </div>
             {phase.meeting_date && (
-              <p className="text-sm text-slate-500 flex items-center gap-1.5 mb-3">
+              <p className="text-sm text-slate-500 flex items-center gap-1.5 mb-1">
                 <Calendar className="w-3.5 h-3.5" />
                 {new Date(phase.meeting_date).toLocaleDateString('he-IL')}
+              </p>
+            )}
+            {phase.duration_hours > 0 && (
+              <p className="text-sm text-slate-500 flex items-center gap-1.5 mb-3">
+                <Clock className="w-3.5 h-3.5" />
+                {phase.duration_hours} שעות
               </p>
             )}
             {phaseTasks.length > 0 && (

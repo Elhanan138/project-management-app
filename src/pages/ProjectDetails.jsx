@@ -7,6 +7,7 @@ import { TimelineView, TableView, CardsView } from '../components/project/PhaseT
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import ModulesEditorInline from '@/components/project/ModulesEditorInline';
+import HoursMeter from '@/components/project/HoursMeter';
 
 export default function ProjectDetails() {
   const queryClient = useQueryClient();
