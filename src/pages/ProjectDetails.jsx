@@ -173,6 +173,7 @@ export default function ProjectDetails() {
             tasks={tasks}
             onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
             onDelete={(id) => deletePhaseMutation.mutate(id)}
+            onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
           />
         )}
         {ganttView === 'table' && (
@@ -181,6 +182,7 @@ export default function ProjectDetails() {
             tasks={tasks}
             onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
             onDelete={(id) => deletePhaseMutation.mutate(id)}
+            onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
           />
         )}
         {ganttView === 'cards' && (
@@ -189,6 +191,7 @@ export default function ProjectDetails() {
             tasks={tasks}
             onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
             onDelete={(id) => deletePhaseMutation.mutate(id)}
+            onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
           />
         )}
       </div>
