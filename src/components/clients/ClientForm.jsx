@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Plus, X, ChevronDown } from 'lucide-react';
 
 const DEFAULT_MODULES = [
@@ -15,6 +15,20 @@ const DEFAULT_MODULES = [
 const ModulesEditor = ({ selected = [], onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [newModule, setNewModule] = useState('');
+  const containerRef = useRef(null);
+
+  // Close on outside click using ref — avoids the fixed overlay that interferes with button events
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
 
   const allOptions = [...new Set([...DEFAULT_MODULES, ...selected])];
 
@@ -34,14 +48,16 @@ const ModulesEditor = ({ selected = [], onChange }) => {
   };
 
   const removeModule = (option) => {
-    onChange(selected.filter(item => item !== option));
+    // Work directly on the current selected array — no async state issues
+    const next = selected.filter(item => item !== option);
+    onChange(next);
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <div
         className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 cursor-pointer flex justify-between items-center min-h-[40px]"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(prev => !prev)}
       >
         <span className="truncate text-sm">
           {selected.length > 0 ? selected.join(', ') : 'בחר מודולים...'}
@@ -50,52 +66,49 @@ const ModulesEditor = ({ selected = [], onChange }) => {
       </div>
 
       {isOpen && (
-        <>
-          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 max-h-72 overflow-y-auto py-1">
-            <div className="px-3 pt-2 pb-1">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="הוסף מודול חדש..."
-                  className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-1.5 outline-none focus:border-emerald-400"
-                  value={newModule}
-                  onChange={e => setNewModule(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCustomModule(); } }}
-                  onClick={e => e.stopPropagation()}
-                />
-                <button
-                  onClick={(e) => { e.stopPropagation(); addCustomModule(); }}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm transition-colors"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-            <div className="border-t border-slate-100 mt-1">
-              {allOptions.map(option => (
-                <div key={option} className="flex items-center justify-between px-4 py-2 hover:bg-slate-50 transition-colors group/item">
-                  <label className="flex items-center gap-3 cursor-pointer flex-1">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 accent-emerald-500 rounded border-slate-300"
-                      checked={selected.includes(option)}
-                      onChange={() => toggleOption(option)}
-                      onClick={e => e.stopPropagation()}
-                    />
-                    <span className="text-sm text-slate-700">{option}</span>
-                  </label>
-                  <button
-                    onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); removeModule(option); }}
-                    className="text-slate-300 hover:text-red-400 opacity-0 group-hover/item:opacity-100 transition-opacity p-0.5"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ))}
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 max-h-72 overflow-y-auto py-1">
+          <div className="px-3 pt-2 pb-1">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="הוסף מודול חדש..."
+                className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-1.5 outline-none focus:border-emerald-400"
+                value={newModule}
+                onChange={e => setNewModule(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCustomModule(); } }}
+              />
+              <button
+                type="button"
+                onClick={() => addCustomModule()}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
-        </>
+          <div className="border-t border-slate-100 mt-1">
+            {allOptions.map(option => (
+              <div key={option} className="flex items-center justify-between px-4 py-2 hover:bg-slate-50 transition-colors group/item">
+                <label className="flex items-center gap-3 cursor-pointer flex-1">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 accent-emerald-500 rounded border-slate-300"
+                    checked={selected.includes(option)}
+                    onChange={() => toggleOption(option)}
+                  />
+                  <span className="text-sm text-slate-700">{option}</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); removeModule(option); }}
+                  className="text-slate-300 hover:text-red-400 opacity-0 group-hover/item:opacity-100 transition-opacity p-0.5"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
