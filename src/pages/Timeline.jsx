@@ -50,19 +50,7 @@ export default function Timeline() {
 
   const sortedPhases = [...(phases || [])].sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
-  const statusColors = {
-    not_started: 'bg-slate-100 text-slate-600 border-slate-200',
-    in_progress: 'bg-cyan-50 text-cyan-600 border-cyan-200',
-    completed: 'bg-emerald-50 text-emerald-600 border-emerald-200',
-    late: 'bg-red-50 text-red-600 border-red-200'
-  };
 
-  const statusLabels = {
-    not_started: 'טרם התחיל',
-    in_progress: 'בתהליך',
-    completed: 'הושלם',
-    late: 'מאחר'
-  };
 
   return (
     <div className="space-y-6">
@@ -78,7 +66,6 @@ export default function Timeline() {
           <div className="flex bg-white rounded-xl p-1 border border-slate-200 shadow-sm w-full md:w-auto">
             <button onClick={() => setView('timeline')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'timeline' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="טיימליין"><GitCommit className="w-5 h-5" /></button>
             <button onClick={() => setView('list')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'list' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="רשימה"><LayoutList className="w-5 h-5" /></button>
-            <button onClick={() => setView('kanban')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'kanban' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="קנבן"><KanbanSquare className="w-5 h-5" /></button>
           </div>
         </div>
       </header>
@@ -92,15 +79,6 @@ export default function Timeline() {
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">שם השלב</label>
                 <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-500 outline-none" value={formData.name || ''} disabled />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
-                <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.status || 'not_started'} onChange={e => setFormData({...formData, status: e.target.value})}>
-                  <option value="not_started">טרם התחיל</option>
-                  <option value="in_progress">בתהליך</option>
-                  <option value="completed">הושלם</option>
-                  <option value="late">מאחר</option>
-                </select>
               </div>
               <div className="flex gap-2 pt-4">
                 <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
@@ -130,9 +108,6 @@ export default function Timeline() {
                     {clientName && <p className="text-emerald-600 font-medium">{clientName}</p>}
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 rounded-lg text-sm font-medium border ${statusColors[phase.status]}`}>
-                      {statusLabels[phase.status]}
-                    </span>
                     <div className="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500 p-1.5 bg-slate-50 rounded-lg"><Edit2 className="w-4 h-4" /></button>
                       <button onClick={() => deleteMutation.mutate(phase.id)} className="text-slate-400 hover:text-red-500 p-1.5 bg-slate-50 rounded-lg"><Trash2 className="w-4 h-4" /></button>
@@ -157,7 +132,6 @@ export default function Timeline() {
               <tr>
                 <th className="p-4 font-medium">שם השלב</th>
                 <th className="p-4 font-medium">לקוח</th>
-                <th className="p-4 font-medium">סטטוס</th>
                 <th className="p-4 font-medium w-24">פעולות</th>
               </tr>
             </thead>
@@ -170,7 +144,6 @@ export default function Timeline() {
                   <tr key={phase.id} className="hover:bg-slate-50 transition-colors group">
                     <td className="p-4 text-slate-800 font-medium cursor-pointer hover:text-emerald-600" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>{phase.name}</td>
                     <td className="p-4 text-slate-500">{clientName || ''}</td>
-                    <td className="p-4"><span className={`px-2.5 py-1 rounded-md text-xs border ${statusColors[phase.status]}`}>{statusLabels[phase.status]}</span></td>
                     <td className="p-4">
                       <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500"><Edit2 className="w-4 h-4" /></button>
@@ -185,40 +158,7 @@ export default function Timeline() {
         </div>
       )}
 
-      {view === 'kanban' && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
-          {['not_started', 'in_progress', 'completed', 'late'].map(status => {
-            const statusPhases = sortedPhases.filter(p => p.status === status);
-            return (
-              <div key={status} className="bg-slate-100/50 rounded-xl p-3 border border-slate-200 flex flex-col max-h-[calc(100vh-250px)]">
-                <h3 className={`font-semibold mb-3 flex justify-between items-center text-sm ${statusColors[status].split(' ')[1]}`}>
-                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${statusColors[status].split(' ')[0]}`}></div>
-                    <span>{statusLabels[status]}</span>
-                  </div>
-                  <span className="bg-slate-200/50 text-slate-600 text-xs px-2 py-0.5 rounded-full font-medium">{statusPhases.length}</span>
-                </h3>
-                <div className="space-y-3 overflow-y-auto pr-1 flex-1 custom-scrollbar pb-2">
-                  {statusPhases.map(phase => {
-                    const project = projects?.find(p => p.id === phase.project_id);
-                    const client = clients?.find(c => c.id === project?.client_id);
-                    const clientName = client?.name || project?.name;
-                    return (
-                      <div key={phase.id} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm hover:shadow-md hover:border-slate-300 transition-all group cursor-pointer" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>
-                        <div className="flex justify-between items-start mb-1.5">
-                          <h4 className="font-semibold text-slate-900 text-sm leading-tight">{phase.name}</h4>
-                          <button onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(phase.id); }} className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"><Trash2 className="w-3.5 h-3.5" /></button>
-                        </div>
-                        {clientName && <p className="text-slate-500 text-xs font-medium">{clientName}</p>}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+
     </div>
   );
 }
