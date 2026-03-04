@@ -79,6 +79,61 @@ export default function HoursMeter({ totalUsed, totalPurchased, projectId }) {
       {isOver && (
         <p className="text-xs text-red-500 mt-2 text-center">חריגה של {(totalUsed - totalPurchased).toFixed(1)} שעות</p>
       )}
+
+      <button
+        onClick={() => setShowReport(true)}
+        className="mt-3 w-full flex items-center justify-center gap-2 text-xs text-slate-500 hover:text-emerald-600 bg-white hover:bg-emerald-50 border border-slate-200 rounded-xl py-2 transition-colors"
+      >
+        <FileText className="w-3.5 h-3.5" />
+        דוח פגישות
+      </button>
+
+      {showReport && (
+        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4" onClick={() => setShowReport(false)}>
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-emerald-500" />
+                דוח פגישות
+              </h3>
+              <button onClick={() => setShowReport(false)} className="text-slate-400 hover:text-slate-600 p-1">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {!phases ? (
+              <p className="text-sm text-slate-400 text-center py-4">טוען...</p>
+            ) : (
+              <>
+                {phases.filter(p => p.meeting_date && p.duration_hours > 0).length === 0 ? (
+                  <p className="text-sm text-slate-400 text-center py-4">אין פגישות רשומות</p>
+                ) : (
+                  <div className="space-y-0 divide-y divide-slate-100">
+                    {phases
+                      .filter(p => p.meeting_date && p.duration_hours > 0)
+                      .sort((a, b) => new Date(a.meeting_date) - new Date(b.meeting_date))
+                      .map(phase => (
+                        <div key={phase.id} className="flex items-center justify-between py-3">
+                          <div>
+                            <p className="text-sm font-medium text-slate-800">{phase.name}</p>
+                            <p className="text-xs text-slate-400">{new Date(phase.meeting_date).toLocaleDateString('he-IL')}</p>
+                          </div>
+                          <span className="text-sm font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">
+                            {phase.duration_hours} שעות
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                )}
+                <div className="border-t border-slate-200 mt-3 pt-3 flex items-center justify-between">
+                  <span className="text-sm font-bold text-slate-700">סה״כ</span>
+                  <span className="text-sm font-bold text-slate-800">{totalUsed} שעות</span>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
