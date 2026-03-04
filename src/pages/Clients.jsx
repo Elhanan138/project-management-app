@@ -192,12 +192,12 @@ export default function Clients() {
               <div className="space-y-4">
                 <h3 className="font-medium text-slate-700 border-b pb-2">פרטי פרויקט</h3>
                 <input type="text" placeholder="שם הפרויקט" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.project_name || ''} onChange={e => setFormData({ ...formData, project_name: e.target.value })} />
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                  <div>
+                <div className="flex flex-col xl:flex-row gap-4">
+                  <div className="flex-1 min-w-0">
                     <label className="block text-xs text-slate-500 mb-1">תאריך התחלה</label>
                     <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.start_date || ''} onChange={e => setFormData({ ...formData, start_date: e.target.value })} />
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <label className="block text-xs text-slate-500 mb-1">תאריך יעד</label>
                     <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.target_date || ''} onChange={e => setFormData({ ...formData, target_date: e.target.value })} />
                   </div>
