@@ -11,7 +11,7 @@ const statusConfig = {
 // Timeline View - vertical timeline with meeting dates
 export function TimelineView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
   return (
-    <div className="relative border-r-2 border-emerald-200 mr-6 pr-8 space-y-6 py-2">
+    <div className="relative border-r-2 border-emerald-200 mr-4 pr-5 md:mr-6 md:pr-8 space-y-6 py-2">
       {phases.map((phase) => {
         const cfg = statusConfig[phase.status] || statusConfig.not_started;
         const phaseTasks = tasks?.filter(t => t.phase_id === phase.id) || [];
@@ -43,7 +43,7 @@ export function TimelineView({ phases, tasks, onEdit, onDelete, onStatusChange }
                     <p className="text-xs text-slate-400 mt-1">{completedTasks}/{phaseTasks.length} משימות הושלמו</p>
                   )}
                 </div>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                   {phase.status !== 'completed' && (
                     <button onClick={() => onStatusChange(phase.id, 'completed')} className="text-slate-400 hover:text-emerald-600 p-1.5 rounded-lg hover:bg-slate-50" title="סמן כבוצע"><CheckCircle2 className="w-3.5 h-3.5" /></button>
                   )}
@@ -63,8 +63,8 @@ export function TimelineView({ phases, tasks, onEdit, onDelete, onStatusChange }
 // Table View
 export function TableView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
   return (
-    <div className="border border-slate-200 rounded-xl overflow-hidden">
-      <table className="w-full text-right">
+    <div className="border border-slate-200 rounded-xl overflow-x-auto">
+      <table className="w-full text-right min-w-[600px]">
         <thead className="bg-slate-50 text-slate-500 text-xs">
           <tr>
             <th className="px-4 py-3 font-medium">שלב</th>
@@ -92,7 +92,7 @@ export function TableView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
                 <td className="px-4 py-3 text-sm text-slate-500">{phase.duration_hours || 0}</td>
                 <td className="px-4 py-3 text-sm text-slate-500">{completedTasks}/{phaseTasks.length}</td>
                 <td className="px-4 py-3">
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                     {phase.status !== 'completed' && (
                       <button onClick={() => onStatusChange(phase.id, 'completed')} className="text-slate-400 hover:text-emerald-600 p-1" title="סמן כבוצע"><CheckCircle2 className="w-3.5 h-3.5" /></button>
                     )}
@@ -127,7 +127,7 @@ export function CardsView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
                 <h4 className="font-bold text-slate-800 mb-1">{phase.name}</h4>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${cfg.bg} ${cfg.text} font-medium`}>{cfg.label}</span>
               </div>
-              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                 {phase.status !== 'completed' && (
                   <button onClick={() => onStatusChange(phase.id, 'completed')} className="text-slate-400 hover:text-emerald-600 p-1" title="סמן כבוצע"><CheckCircle2 className="w-3.5 h-3.5" /></button>
                 )}

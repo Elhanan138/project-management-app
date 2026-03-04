@@ -84,14 +84,14 @@ export default function Home() {
         <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div className="text-slate-500 text-sm font-medium mb-4">פרויקטים פעילים</div>
           <div className="flex items-end justify-between">
-            <div className="text-3xl font-bold text-slate-900">{activeProjects}</div>
+            <div className="text-2xl md:text-3xl font-bold text-slate-900">{activeProjects}</div>
             <div className="text-emerald-500 text-sm font-medium bg-emerald-50 px-2 py-1 rounded-md">+2 החודש</div>
           </div>
         </div>
         <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div className="text-slate-500 text-sm font-medium mb-4">התקדמות משימות כוללת</div>
           <div className="flex items-end justify-between">
-            <div className="text-3xl font-bold text-slate-900">{taskProgress}%</div>
+            <div className="text-2xl md:text-3xl font-bold text-slate-900">{taskProgress}%</div>
             <div className="text-slate-400 text-sm">{completedTasks} מתוך {totalTasks}</div>
           </div>
           <div className="h-1.5 w-full bg-slate-100 rounded-full mt-4 overflow-hidden">
@@ -101,7 +101,7 @@ export default function Home() {
         <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div className="text-slate-500 text-sm font-medium mb-4">שלבים בעיכוב</div>
           <div className="flex items-end justify-between">
-            <div className="text-3xl font-bold text-slate-900">{latePhases}</div>
+            <div className="text-2xl md:text-3xl font-bold text-slate-900">{latePhases}</div>
             {latePhases > 0 ? (
               <div className="text-red-500 text-sm font-medium bg-red-50 px-2 py-1 rounded-md">דורש התייחסות</div>
             ) : (

@@ -97,7 +97,7 @@ export default function ProjectDetails() {
           <div className="flex-1">
             <div className="flex flex-col md:flex-row justify-between items-start mb-6 gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-slate-800 mb-2">{project.name || client?.name || project.client_name || 'פרויקט ללא שם'}</h1>
+                <h1 className="text-xl md:text-3xl font-bold text-slate-800 mb-2">{project.name || client?.name || project.client_name || 'פרויקט ללא שם'}</h1>
                 <div className="flex flex-wrap gap-4 text-sm text-slate-500">
                   <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> התחלה: {new Date(project.start_date).toLocaleDateString('he-IL')}</span>
                   <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> יעד: {new Date(project.target_date).toLocaleDateString('he-IL')}</span>
@@ -108,11 +108,11 @@ export default function ProjectDetails() {
                 projectId={project.id}
               />
             </div>
-            <div className="px-2 md:px-8 pb-4 overflow-x-auto">
+            <div className="px-0 md:px-8 pb-4 overflow-x-auto">
               <ProgressStepper phases={sortedPhases} />
             </div>
           </div>
-          <div className="md:w-56 flex-shrink-0">
+          <div className="w-full md:w-56 flex-shrink-0">
             <HoursMeter
               totalUsed={totalHoursUsed}
               totalPurchased={totalHoursPurchased}
@@ -127,15 +127,15 @@ export default function ProjectDetails() {
           <h2 className="text-lg font-bold text-slate-900 tracking-tight">
             ציר זמן שלבים
           </h2>
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <button
-              onClick={() => { setIsEditingPhase('new'); setPhaseFormData({ status: 'not_started' }); }}
-              className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors text-sm font-medium shadow-sm"
-            >
-              <Plus className="w-4 h-4" />
-              הוסף שלב
-            </button>
-            <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200">
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <button
+            onClick={() => { setIsEditingPhase('new'); setPhaseFormData({ status: 'not_started' }); }}
+            className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors text-sm font-medium shadow-sm w-full md:w-auto justify-center"
+          >
+            <Plus className="w-4 h-4" />
+            הוסף שלב
+          </button>
+          <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200">
               <button onClick={() => setGanttView('timeline')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'timeline' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="ציר זמן"><GitCommit className="w-4 h-4" /></button>
               <button onClick={() => setGanttView('table')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'table' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="טבלה"><LayoutList className="w-4 h-4" /></button>
               <button onClick={() => setGanttView('cards')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'cards' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="כרטיסיות"><LayoutGrid className="w-4 h-4" /></button>

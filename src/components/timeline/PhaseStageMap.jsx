@@ -69,13 +69,13 @@ export default function PhaseStageMap({ phases, projects, clients }) {
                     to={createPageUrl('ProjectDetails') + `?id=${item.projectId}`}
                     className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors"
                   >
-                    <div>
-                      <p className="text-sm font-medium text-slate-700">{item.clientName || item.projectName}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-slate-700 truncate">{item.clientName || item.projectName}</p>
                       {item.clientName && item.projectName !== item.clientName && (
-                        <p className="text-xs text-slate-400">{item.projectName}</p>
+                        <p className="text-xs text-slate-400 truncate">{item.projectName}</p>
                       )}
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColors[item.status] || statusColors.not_started}`}>
                         {statusLabels[item.status] || statusLabels.not_started}
                       </span>

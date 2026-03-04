@@ -32,7 +32,7 @@ export default function HoursMeter({ totalUsed, totalPurchased, projectId }) {
             <Pencil className="w-3.5 h-3.5" />
           </button>
         ) : (
-          <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1">
             <input
               type="number"
               step="0.5"
