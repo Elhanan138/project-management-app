@@ -12,22 +12,26 @@ export default function TaskItem({ task, project, phase, client, onEdit }) {
       
       // Sync phase status
       if (task.phase_id) {
-        const phaseTasks = await base44.entities.Task.filter({ phase_id: task.phase_id });
-        if (phaseTasks.length > 0) {
-          const allCompleted = phaseTasks.every(t => t.id === task.id ? isCompleted : t.is_completed);
-          const anyCompleted = phaseTasks.some(t => t.id === task.id ? isCompleted : t.is_completed);
-          const phase = await base44.entities.Phase.get(task.phase_id);
-          
-          if (phase) {
-            let newStatus = phase.status;
-            if (allCompleted) newStatus = 'completed';
-            else if (anyCompleted && phase.status === 'not_started') newStatus = 'in_progress';
-            else if (!allCompleted && phase.status === 'completed') newStatus = 'in_progress';
+        try {
+          const phaseTasks = await base44.entities.Task.filter({ phase_id: task.phase_id });
+          if (phaseTasks.length > 0) {
+            const allCompleted = phaseTasks.every(t => t.id === task.id ? isCompleted : t.is_completed);
+            const anyCompleted = phaseTasks.some(t => t.id === task.id ? isCompleted : t.is_completed);
+            const phase = await base44.entities.Phase.get(task.phase_id);
             
-            if (newStatus !== phase.status) {
-              await base44.entities.Phase.update(task.phase_id, { status: newStatus });
+            if (phase) {
+              let newStatus = phase.status;
+              if (allCompleted) newStatus = 'completed';
+              else if (anyCompleted && phase.status === 'not_started') newStatus = 'in_progress';
+              else if (!allCompleted && phase.status === 'completed') newStatus = 'in_progress';
+              
+              if (newStatus !== phase.status) {
+                await base44.entities.Phase.update(task.phase_id, { status: newStatus });
+              }
             }
           }
+        } catch (error) {
+          console.error("Error syncing phase status:", error);
         }
       }
     },
