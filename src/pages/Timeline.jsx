@@ -74,10 +74,7 @@ export default function Timeline() {
             <Plus className="w-4 h-4" />
             שלב חדש
           </button>
-          <div className="flex bg-white rounded-xl p-1 border border-slate-200 shadow-sm w-full md:w-auto">
-            <button onClick={() => setView('timeline')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'timeline' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="טיימליין"><GitCommit className="w-5 h-5" /></button>
-            <button onClick={() => setView('list')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'list' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="רשימה"><LayoutList className="w-5 h-5" /></button>
-          </div>
+
         </div>
       </header>
 
