@@ -113,9 +113,9 @@ export default function Clients() {
 
       {/* מודאל יצירה/עריכה */}
       {isEditing && (
-        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-stretch md:items-center justify-center" onClick={() => setIsEditing(null)}>
+        <div className="fixed inset-0 z-50 flex flex-col bg-white md:bg-transparent md:items-center md:justify-center" onClick={() => setIsEditing(null)}>
           <div 
-            className="bg-white w-full md:rounded-2xl md:max-w-lg shadow-xl md:max-h-[85vh] flex flex-col"
+            className="flex-1 md:flex-initial bg-white md:rounded-2xl md:max-w-lg md:w-full shadow-xl md:max-h-[85vh] flex flex-col overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-5 pb-3 border-b border-slate-100 shrink-0">
@@ -129,7 +129,7 @@ export default function Clients() {
             <div className="flex-1 overflow-y-auto p-5">
               <ClientForm formData={formData} setFormData={setFormData} />
             </div>
-            <div className="flex gap-2 p-5 pt-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] border-t border-slate-200 shrink-0">
+            <div className="flex gap-2 p-4 border-t border-slate-200 shrink-0 bg-white" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
               <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium">
                 <Save className="w-4 h-4" /> {isEditing === 'new' ? 'שמור הכל' : 'שמור'}
               </button>
