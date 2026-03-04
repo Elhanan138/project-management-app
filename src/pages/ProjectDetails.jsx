@@ -152,10 +152,8 @@ export default function ProjectDetails() {
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
                   <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.status || 'not_started'} onChange={e => setPhaseFormData({...phaseFormData, status: e.target.value})}>
-                    <option value="not_started">טרם התחיל</option>
-                    <option value="in_progress">בתהליך</option>
+                    <option value="not_started">מתוכנן</option>
                     <option value="completed">הושלם</option>
-                    <option value="late">מאחר</option>
                   </select>
                 </div>
                 <div className="flex gap-2 pt-4">
