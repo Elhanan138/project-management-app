@@ -80,7 +80,7 @@ export default function Home() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {isEditing === 'new' && (
+        {isEditing && (
           <div className="bg-white border border-emerald-200 rounded-2xl p-6 shadow-md">
             <div className="space-y-4">
               <input type="text" placeholder="שם הפרויקט" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.name || ''} onChange={e => setFormData({ ...formData, name: e.target.value })} />
@@ -108,6 +108,9 @@ export default function Home() {
               client={clients?.find(c => c.id === project.client_id)}
             />
             <div className="absolute top-4 left-4 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsEditing(project.id); setFormData({ ...project, purchased_modules: project.purchased_modules?.join(', ') || '' }); }} className="bg-emerald-50 text-emerald-600 p-2 rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-100">
+                <Edit2 className="w-4 h-4" />
+              </button>
               <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteMutation.mutate(project.id); }} className="bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-100 transition-colors border border-red-100">
                 <Trash2 className="w-4 h-4" />
               </button>
