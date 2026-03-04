@@ -226,30 +226,33 @@ export default function Timeline() {
       )}
 
       {view === 'kanban' && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
           {['not_started', 'in_progress', 'completed', 'late'].map(status => {
             const statusPhases = sortedPhases.filter(p => p.status === status);
             return (
-              <div key={status} className="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col h-[calc(100vh-250px)] shadow-sm">
-                <h3 className={`font-bold mb-4 pb-3 border-b flex justify-between items-center ${statusColors[status].split(' ')[1]}`}>
-                  <span>{statusLabels[status]}</span>
-                  <span className="bg-white shadow-sm text-xs px-2.5 py-1 rounded-full border border-slate-100">{statusPhases.length}</span>
+              <div key={status} className="bg-slate-100/50 rounded-xl p-3 border border-slate-200 flex flex-col max-h-[calc(100vh-250px)]">
+                <h3 className={`font-semibold mb-3 flex justify-between items-center text-sm ${statusColors[status].split(' ')[1]}`}>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${statusColors[status].split(' ')[0]}`}></div>
+                    <span>{statusLabels[status]}</span>
+                  </div>
+                  <span className="bg-slate-200/50 text-slate-600 text-xs px-2 py-0.5 rounded-full font-medium">{statusPhases.length}</span>
                 </h3>
-                <div className="space-y-3 overflow-y-auto pr-1 flex-1 custom-scrollbar pb-4">
+                <div className="space-y-3 overflow-y-auto pr-1 flex-1 custom-scrollbar pb-2">
                   {statusPhases.map(phase => {
                     const project = projects?.find(p => p.id === phase.project_id);
                     const client = clients?.find(c => c.id === project?.client_id);
                     const clientName = client?.name || project?.name || 'לקוח לא ידוע';
                     return (
-                      <div key={phase.id} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-emerald-300 transition-colors group cursor-pointer" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-bold text-slate-800 text-sm">{phase.name}</h4>
-                          <button onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(phase.id); }} className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 className="w-3 h-3" /></button>
+                      <div key={phase.id} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm hover:shadow-md hover:border-slate-300 transition-all group cursor-pointer" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>
+                        <div className="flex justify-between items-start mb-1.5">
+                          <h4 className="font-semibold text-slate-900 text-sm leading-tight">{phase.name}</h4>
+                          <button onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(phase.id); }} className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"><Trash2 className="w-3.5 h-3.5" /></button>
                         </div>
-                        <p className="text-emerald-600 text-xs font-medium mb-3">{clientName}</p>
-                        <div className="flex flex-col gap-1 text-xs text-slate-500">
-                          <div className="flex items-center gap-1"><Calendar className="w-3 h-3" /> התחלה: {new Date(phase.start_date).toLocaleDateString('he-IL')}</div>
-                          <div className="flex items-center gap-1"><Calendar className="w-3 h-3" /> יעד: {new Date(phase.expected_end_date).toLocaleDateString('he-IL')}</div>
+                        <p className="text-slate-500 text-xs font-medium mb-3">{clientName}</p>
+                        <div className="flex flex-col gap-1.5 text-[11px] text-slate-500 bg-slate-50 p-2 rounded-md">
+                          <div className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> התחלה: {new Date(phase.start_date).toLocaleDateString('he-IL')}</div>
+                          <div className="flex items-center gap-1.5"><Clock className="w-3 h-3" /> יעד: {new Date(phase.expected_end_date).toLocaleDateString('he-IL')}</div>
                         </div>
                       </div>
                     );
