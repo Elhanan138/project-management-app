@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Plus, Edit2, Trash2, Save, X, Calendar, Clock, LayoutList, KanbanSquare, GitCommit } from 'lucide-react';
+import PhaseStageMap from '@/components/timeline/PhaseStageMap';
 
 export default function Timeline() {
   const queryClient = useQueryClient();
@@ -50,6 +51,9 @@ export default function Timeline() {
 
   const sortedPhases = [...(phases || [])].sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
+  // Get unique phase names (generic stages)
+  const uniquePhaseNames = [...new Set((phases || []).map(p => p.name).filter(Boolean))];
+
 
 
   return (
@@ -96,53 +100,23 @@ export default function Timeline() {
         </div>
       )}
 
-      {view === 'timeline' && (
-        <div className="relative border-r-2 border-emerald-200 mr-4 pr-6 space-y-8 py-4">
-          {sortedPhases.map((phase) => (
-            <div key={phase.id} className="relative group">
-              <div className="absolute -right-[35px] top-4 w-4 h-4 rounded-full bg-emerald-500 border-4 border-white shadow-sm" />
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all hover:border-emerald-300">
-                <div className="flex justify-between items-center gap-4">
-                  <h3 className="text-lg font-bold text-slate-800">{phase.name}</h3>
-                  <div className="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500 p-1.5 bg-slate-50 rounded-lg"><Edit2 className="w-4 h-4" /></button>
-                    <button onClick={() => deleteMutation.mutate(phase.id)} className="text-slate-400 hover:text-red-500 p-1.5 bg-slate-50 rounded-lg"><Trash2 className="w-4 h-4" /></button>
-                  </div>
-                </div>
-              </div>
-            </div>
+      {/* חלק ראשון: ניהול שלבים גנריים */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+        <h2 className="text-lg font-bold text-slate-800 mb-4">שלבי הטמעה</h2>
+        <div className="flex flex-wrap gap-2">
+          {uniquePhaseNames.map(name => (
+            <span key={name} className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-sm font-medium">
+              {name}
+            </span>
           ))}
-          {sortedPhases.length === 0 && (
-            <div className="text-slate-500 py-8">אין שלבים להצגה.</div>
+          {uniquePhaseNames.length === 0 && (
+            <p className="text-slate-400 text-sm">אין שלבים עדיין. הוסף שלב חדש.</p>
           )}
         </div>
-      )}
+      </div>
 
-      {view === 'list' && (
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-x-auto shadow-sm">
-          <table className="w-full text-right">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm">
-              <tr>
-                <th className="p-4 font-medium">שם השלב</th>
-                <th className="p-4 font-medium w-24">פעולות</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {sortedPhases.map(phase => (
-                  <tr key={phase.id} className="hover:bg-slate-50 transition-colors group">
-                    <td className="p-4 text-slate-800 font-medium cursor-pointer hover:text-emerald-600" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>{phase.name}</td>
-                    <td className="p-4">
-                      <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500"><Edit2 className="w-4 h-4" /></button>
-                        <button onClick={() => deleteMutation.mutate(phase.id)} className="text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
-                      </div>
-                    </td>
-                  </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {/* חלק שני: מפת שלבים-לקוחות */}
+      <PhaseStageMap phases={phases} projects={projects} clients={clients} />
 
 
     </div>
