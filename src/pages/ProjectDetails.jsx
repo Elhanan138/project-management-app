@@ -100,16 +100,16 @@ export default function ProjectDetails() {
       </header>
 
       <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold flex items-center gap-2 text-slate-800">
-            תצוגת גאנט (Gantt) ושלבים
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+            ציר זמן שלבים (Gantt)
           </h2>
           <button
             onClick={() => { setIsEditingPhase('new'); setPhaseFormData({ status: 'not_started' }); }}
-            className="bg-emerald-50 text-emerald-600 hover:bg-emerald-100 px-3 py-1.5 rounded-xl flex items-center gap-2 transition-colors text-sm font-medium"
+            className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors text-sm font-medium shadow-sm"
           >
             <Plus className="w-4 h-4" />
-            שלב חדש
+            הוסף שלב
           </button>
         </div>
         
@@ -181,21 +181,24 @@ export default function ProjectDetails() {
               }
 
               return (
-                <div key={phase.id} className="relative h-12 flex items-center group">
-                  <div className="w-48 text-sm font-medium text-slate-700 truncate pr-4 flex items-center gap-2">
-                    {phase.status === 'late' && <AlertCircle className="w-4 h-4 text-red-500" />}
-                    {phase.name}
-                    <div className="flex gap-1 mr-auto opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }} className="text-slate-400 hover:text-emerald-500 p-1"><Edit2 className="w-3 h-3" /></button>
-                      <button onClick={() => deletePhaseMutation.mutate(phase.id)} className="text-slate-400 hover:text-red-500 p-1"><Trash2 className="w-3 h-3" /></button>
+                <div key={phase.id} className="relative h-14 flex items-center group hover:bg-slate-50/50 rounded-lg transition-colors">
+                  <div className="w-56 text-sm font-medium text-slate-800 truncate pr-4 flex items-center gap-2">
+                    {phase.status === 'late' && <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />}
+                    <span className="truncate">{phase.name}</span>
+                    <div className="flex gap-1 mr-auto opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity pl-2">
+                      <button onClick={() => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }} className="text-slate-400 hover:text-emerald-600 p-1.5 rounded hover:bg-white shadow-sm"><Edit2 className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => deletePhaseMutation.mutate(phase.id)} className="text-slate-400 hover:text-red-600 p-1.5 rounded hover:bg-white shadow-sm"><Trash2 className="w-3.5 h-3.5" /></button>
                     </div>
                   </div>
-                  <div className="flex-1 relative h-full bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
+                  <div className="flex-1 relative h-full py-2 border-r border-slate-100">
+                    {/* Background grid lines could go here */}
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGgwLjV2NDBIMHoiIGZpbGw9IiNmMThmMjkiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==')] opacity-50"></div>
                     <div 
-                      className={`absolute top-2 bottom-2 rounded-md ${statusColors[phase.status]} opacity-90 transition-all duration-500 hover:opacity-100 flex items-center px-3 text-xs font-bold text-white shadow-sm`}
-                      style={{ right: `${leftPercent}%`, width: `${widthPercent}%` }}
+                      className={`absolute top-2 bottom-2 rounded-md ${statusColors[phase.status]} transition-all duration-500 hover:brightness-110 flex items-center px-3 text-xs font-semibold text-white shadow-sm cursor-pointer hover:shadow-md`}
+                      style={{ right: `${leftPercent}%`, width: `${Math.max(widthPercent, 2)}%` }}
+                      title={`${phase.name} (${new Date(phase.start_date).toLocaleDateString('he-IL')} - ${new Date(phase.expected_end_date).toLocaleDateString('he-IL')})`}
                     >
-                      <span className="truncate">{completedTasks}/{phaseTasks.length} משימות</span>
+                      <span className="truncate drop-shadow-sm">{completedTasks}/{phaseTasks.length} משימות</span>
                     </div>
                   </div>
                 </div>

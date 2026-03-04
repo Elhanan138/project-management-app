@@ -186,44 +186,60 @@ export default function Tasks() {
         </div>
       )}
 
-      <div className="bg-white border border-slate-200 rounded-2xl overflow-x-auto shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
         <div className="min-w-[800px]">
           <table className="w-full text-right">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm">
+            <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs uppercase tracking-wider">
               <tr>
-                <th className="p-4 font-medium">שם המשימה</th>
-                <th className="p-4 font-medium">פרויקט</th>
-                <th className="p-4 font-medium">שלב</th>
-                <th className="p-4 font-medium">עדיפות</th>
-                <th className="p-4 font-medium">תאריך יעד</th>
-                <th className="p-4 font-medium">סטטוס</th>
-                <th className="p-4 font-medium w-24">פעולות</th>
+                <th className="px-6 py-4 font-semibold">שם המשימה</th>
+                <th className="px-6 py-4 font-semibold">פרויקט</th>
+                <th className="px-6 py-4 font-semibold">שלב</th>
+                <th className="px-6 py-4 font-semibold">עדיפות</th>
+                <th className="px-6 py-4 font-semibold">תאריך יעד</th>
+                <th className="px-6 py-4 font-semibold">סטטוס</th>
+                <th className="px-6 py-4 font-semibold w-24">פעולות</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 bg-white">
               {filteredTasks?.map(task => (
-                <tr key={task.id} className="hover:bg-slate-50 transition-colors group">
-                  <td className="p-4 text-slate-800 font-medium cursor-pointer hover:text-emerald-600" onClick={() => { setIsEditing(task.id); setFormData(task); }}>{task.name}</td>
-                  <td className="p-4 text-slate-500">{projects?.find(p => p.id === task.project_id)?.name || projects?.find(p => p.id === task.project_id)?.client_name || '-'}</td>
-                  <td className="p-4 text-slate-500">{phases?.find(p => p.id === task.phase_id)?.name || '-'}</td>
-                  <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-md text-xs border ${task.priority === 'high' ? 'bg-red-50 text-red-600 border-red-100' : task.priority === 'medium' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-cyan-50 text-cyan-600 border-cyan-100'}`}>
-                      {task.priority === 'high' ? 'גבוהה' : task.priority === 'medium' ? 'בינונית' : 'נמוכה'}
+                <tr key={task.id} className={`hover:bg-slate-50/80 transition-colors group ${task.is_completed ? 'opacity-60' : ''}`}>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div 
+                        onClick={() => updateMutation.mutate({ id: task.id, data: { is_completed: !task.is_completed, phase_id: task.phase_id } })}
+                        className={`w-5 h-5 rounded border flex items-center justify-center cursor-pointer transition-colors ${task.is_completed ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 hover:border-emerald-400'}`}
+                      >
+                        {task.is_completed && <CheckSquare className="w-3.5 h-3.5" />}
+                      </div>
+                      <span className={`text-sm font-medium cursor-pointer hover:text-emerald-600 transition-colors ${task.is_completed ? 'text-slate-500 line-through' : 'text-slate-900'}`} onClick={() => { setIsEditing(task.id); setFormData(task); }}>
+                        {task.name}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-500">{projects?.find(p => p.id === task.project_id)?.name || projects?.find(p => p.id === task.project_id)?.client_name || '-'}</td>
+                  <td className="px-6 py-4 text-sm text-slate-500">
+                    <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md text-xs font-medium">
+                      {phases?.find(p => p.id === task.phase_id)?.name || '-'}
                     </span>
                   </td>
-                  <td className="p-4 text-slate-500">{task.due_date ? new Date(task.due_date).toLocaleDateString('he-IL') : '-'}</td>
-                  <td className="p-4">
-                    <button 
-                      onClick={() => updateMutation.mutate({ id: task.id, data: { is_completed: !task.is_completed, phase_id: task.phase_id } })}
-                      className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${task.is_completed ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
-                    >
-                      {task.is_completed ? 'הושלם' : 'פתוח'}
-                    </button>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5">
+                      <div className={`w-2 h-2 rounded-full ${task.priority === 'high' ? 'bg-red-500' : task.priority === 'medium' ? 'bg-amber-500' : 'bg-cyan-500'}`} />
+                      <span className="text-xs font-medium text-slate-600">
+                        {task.priority === 'high' ? 'גבוהה' : task.priority === 'medium' ? 'בינונית' : 'נמוכה'}
+                      </span>
+                    </div>
                   </td>
-                  <td className="p-4">
+                  <td className="px-6 py-4 text-sm text-slate-500">{task.due_date ? new Date(task.due_date).toLocaleDateString('he-IL') : '-'}</td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${task.is_completed ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-700'}`}>
+                      {task.is_completed ? 'הושלם' : 'פתוח'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
                     <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => { setIsEditing(task.id); setFormData(task); }} className="text-slate-400 hover:text-emerald-500"><Edit2 className="w-4 h-4" /></button>
-                      <button onClick={() => deleteMutation.mutate(task.id)} className="text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                      <button onClick={() => { setIsEditing(task.id); setFormData(task); }} className="text-slate-400 hover:text-emerald-600 p-1 rounded hover:bg-emerald-50"><Edit2 className="w-4 h-4" /></button>
+                      <button onClick={() => deleteMutation.mutate(task.id)} className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-red-50"><Trash2 className="w-4 h-4" /></button>
                     </div>
                   </td>
                 </tr>
