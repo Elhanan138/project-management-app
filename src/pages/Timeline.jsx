@@ -40,9 +40,24 @@ export default function Timeline() {
     onSuccess: () => queryClient.invalidateQueries(['phases'])
   });
 
-  const handleSave = () => {
-    if (isEditing === 'new') createMutation.mutate(formData);
-    else updateMutation.mutate({ id: isEditing, data: formData });
+  const handleSave = async () => {
+    if (isEditing === 'new') {
+      createMutation.mutate(formData);
+    } else if (typeof isEditing === 'string' && isEditing.endsWith('__rename')) {
+      // Rename all phases with the original name
+      const originalName = formData.originalName;
+      const newName = formData.name;
+      if (originalName && newName && originalName !== newName) {
+        const toRename = (phases || []).filter(p => p.name === originalName);
+        for (const p of toRename) {
+          await base44.entities.Phase.update(p.id, { name: newName });
+        }
+        queryClient.invalidateQueries(['phases']);
+      }
+      setIsEditing(null);
+    } else {
+      updateMutation.mutate({ id: isEditing, data: formData });
+    }
   };
 
   if (projectsLoading || clientsLoading || phasesLoading) {
@@ -102,9 +117,26 @@ export default function Timeline() {
         <h2 className="text-lg font-bold text-slate-800 mb-4">שלבי הטמעה</h2>
         <div className="flex flex-wrap gap-2">
           {uniquePhaseNames.map(name => (
-            <span key={name} className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-sm font-medium">
-              {name}
-            </span>
+            <div key={name} className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 group">
+              <span>{name}</span>
+              <button
+                onClick={() => { setIsEditing(name + '__rename'); setFormData({ name, originalName: name }); }}
+                className="text-emerald-400 hover:text-emerald-600 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Edit2 className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => {
+                  if (confirm(`למחוק את השלב "${name}" מכל הפרויקטים?`)) {
+                    const phasesToDelete = (phases || []).filter(p => p.name === name);
+                    phasesToDelete.forEach(p => deleteMutation.mutate(p.id));
+                  }
+                }}
+                className="text-emerald-400 hover:text-red-500 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
           ))}
           {uniquePhaseNames.length === 0 && (
             <p className="text-slate-400 text-sm">אין שלבים עדיין. הוסף שלב חדש.</p>
@@ -114,6 +146,7 @@ export default function Timeline() {
 
       {/* חלק שני: מפת שלבים-לקוחות */}
       <PhaseStageMap phases={phases} projects={projects} clients={clients} />
+
 
 
     </div>
