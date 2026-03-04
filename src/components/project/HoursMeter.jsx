@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Clock, Pencil, Check, X } from 'lucide-react';
+import { Clock, Pencil, Check, X, FileText } from 'lucide-react';
 
 export default function HoursMeter({ totalUsed, totalPurchased, projectId }) {
+  const [showReport, setShowReport] = useState(false);
+
+  const { data: phases } = useQuery({
+    queryKey: ['phases-report', projectId],
+    queryFn: () => base44.entities.Phase.filter({ project_id: projectId }),
+    enabled: showReport
+  });
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [hours, setHours] = useState(totalPurchased);
