@@ -140,8 +140,6 @@ export default function Clients() {
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {
-
         {orphanedProjects.map(project => (
           <div key={`orphan-${project.id}`} className="bg-amber-50 border border-amber-200 rounded-xl p-6 shadow-sm">
             <div className="flex items-start gap-3 mb-3">
