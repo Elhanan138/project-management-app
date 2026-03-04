@@ -13,8 +13,9 @@ export default function Layout({ children, currentPageName }) {
 
   const navItems = [
     { name: 'Home', label: 'דשבורד ראשי', icon: LayoutDashboard },
+    { name: 'ControlPanel', label: 'עמוד שליטה', icon: LayoutDashboard },
     { name: 'Timeline', label: 'מעקב שלבים', icon: Layers },
-    { name: 'Clients', label: 'לקוחות', icon: Users },
+    { name: 'Clients', label: 'ניהול פרויקטים ולקוחות', icon: Users },
     { name: 'Tasks', label: 'ניהול משימות', icon: CheckSquare },
   ];
 

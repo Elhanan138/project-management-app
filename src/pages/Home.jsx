@@ -76,13 +76,7 @@ export default function Home() {
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-1">דשבורד פרויקטים</h1>
           <p className="text-slate-500 text-sm">מבט על לכלל הטמעות ה-LMS הפעילות</p>
         </div>
-        <button
-          onClick={() => { setIsEditing('new'); setFormData({}); }}
-          className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-sm w-full md:w-auto justify-center text-sm font-medium"
-        >
-          <Plus className="w-4 h-4" />
-          פרויקט חדש
-        </button>
+
       </header>
 
       {/* KPI Cards */}
@@ -118,24 +112,7 @@ export default function Home() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {isEditing && (
-          <div className="bg-white border border-emerald-200 rounded-2xl p-6 shadow-md">
-            <div className="space-y-4">
-              <input type="text" placeholder="שם הפרויקט" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.name || ''} onChange={e => setFormData({ ...formData, name: e.target.value })} />
-              <select className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.client_id || ''} onChange={e => setFormData({ ...formData, client_id: e.target.value })}>
-                <option value="">בחר לקוח...</option>
-                {clients?.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-              <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.start_date || ''} onChange={e => setFormData({ ...formData, start_date: e.target.value })} />
-              <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.target_date || ''} onChange={e => setFormData({ ...formData, target_date: e.target.value })} />
-              <input type="text" placeholder="מודולים נרכשים (מופרדים בפסיק)" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.purchased_modules || ''} onChange={e => setFormData({ ...formData, purchased_modules: e.target.value })} />
-              <div className="flex gap-2 pt-2">
-                <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
-                <button onClick={() => setIsEditing(null)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><X className="w-4 h-4" /> בטל</button>
-              </div>
-            </div>
-          </div>
-        )}
+
 
         {projects?.map(project => (
           <div key={project.id} className="relative group">
@@ -145,14 +122,7 @@ export default function Home() {
               tasks={tasks || []} 
               client={clients?.find(c => c.id === project.client_id)}
             />
-            <div className="absolute top-4 left-4 flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-              <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsEditing(project.id); setFormData({ ...project, purchased_modules: project.purchased_modules?.join(', ') || '' }); }} className="bg-emerald-50 text-emerald-600 p-2 rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-100">
-                <Edit2 className="w-4 h-4" />
-              </button>
-              <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteMutation.mutate(project.id); }} className="bg-red-50 text-red-500 p-2 rounded-lg hover:bg-red-100 transition-colors border border-red-100">
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
+
           </div>
         ))}
         {projects?.length === 0 && (

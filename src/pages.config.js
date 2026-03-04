@@ -52,6 +52,7 @@ import Home from './pages/Home';
 import ProjectDetails from './pages/ProjectDetails';
 import Tasks from './pages/Tasks';
 import Timeline from './pages/Timeline';
+import ControlPanel from './pages/ControlPanel';
 import __Layout from './Layout.jsx';
 
 
@@ -61,6 +62,7 @@ export const PAGES = {
     "ProjectDetails": ProjectDetails,
     "Tasks": Tasks,
     "Timeline": Timeline,
+    "ControlPanel": ControlPanel,
 }
 
 export const pagesConfig = {
