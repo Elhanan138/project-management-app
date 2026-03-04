@@ -11,7 +11,8 @@ export default function ProjectCard({ project, phases, tasks, client }) {
 
   // Current phase
   const projectPhases = phases.filter(p => p.project_id === project.id);
-  const currentPhase = projectPhases.find(p => p.status === 'in_progress' || p.status === 'late') || projectPhases[0];
+  const sortedPhases = [...projectPhases].sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+  const currentPhase = sortedPhases.find(p => p.status !== 'completed') || sortedPhases[sortedPhases.length - 1];
   
   const isLate = currentPhase?.status === 'late';
 
