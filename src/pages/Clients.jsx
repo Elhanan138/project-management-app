@@ -147,7 +147,7 @@ export default function Clients() {
             ) : (
               <>
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold text-slate-800">{client.name}</h3>
+                  <h3 className="text-xl font-bold text-slate-800 cursor-pointer hover:text-emerald-600" onClick={() => { setIsEditing(client.id); setFormData(client); }}>{client.name}</h3>
                   <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => { setIsEditing(client.id); setFormData(client); }} className="text-slate-400 hover:text-emerald-500 p-1">
                       <Edit2 className="w-4 h-4" />

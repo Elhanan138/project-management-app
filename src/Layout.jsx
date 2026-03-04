@@ -13,7 +13,7 @@ export default function Layout({ children, currentPageName }) {
 
   const navItems = [
     { name: 'Home', label: 'דשבורד ראשי', icon: LayoutDashboard },
-    { name: 'Timeline', label: 'טיימליין שלבים', icon: Layers },
+    { name: 'Timeline', label: 'מעקב שלבים', icon: Layers },
     { name: 'DailyExecution', label: 'ביצוע יומי', icon: CheckSquare },
     { name: 'Clients', label: 'לקוחות', icon: Users },
     { name: 'Tasks', label: 'ניהול משימות', icon: CheckSquare },
@@ -44,8 +44,8 @@ export default function Layout({ children, currentPageName }) {
       <aside className={`fixed top-0 right-0 w-64 h-screen bg-white border-l border-slate-200 flex flex-col z-50 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:translate-x-0 shadow-lg md:shadow-none`}>
         <div className="p-6 border-b border-slate-200 hidden md:block">
           <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2">
-            <Briefcase className="w-6 h-6" />
-            Blossom LMS
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a59f1c1b4a544303ab2e4e/dab183c0c_blossom-favicon.png" alt="Logo" className="w-6 h-6" />
+            ניהול פרויקטים
           </h1>
         </div>
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">

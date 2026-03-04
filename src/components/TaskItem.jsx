@@ -3,7 +3,7 @@ import { CheckCircle2, Clock, AlertCircle, Flag } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export default function TaskItem({ task, project, phase, client }) {
+export default function TaskItem({ task, project, phase, client, onEdit }) {
   const queryClient = useQueryClient();
   
   const toggleTaskMutation = useMutation({
@@ -46,7 +46,10 @@ export default function TaskItem({ task, project, phase, client }) {
         </button>
         
         <div className="flex-1 min-w-0">
-          <h4 className={`font-medium mb-1.5 ${task.is_completed ? 'text-slate-400 line-through' : 'text-slate-800'}`}>
+          <h4 
+            className={`font-medium mb-1.5 ${task.is_completed ? 'text-slate-400 line-through' : 'text-slate-800'} ${onEdit ? 'cursor-pointer hover:text-emerald-600 transition-colors' : ''}`}
+            onClick={() => onEdit && onEdit(task)}
+          >
             {task.name}
           </h4>
           

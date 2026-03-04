@@ -142,7 +142,7 @@ export default function Tasks() {
                     </>
                   ) : (
                     <>
-                      <td className="p-4 text-slate-800 font-medium">{task.name}</td>
+                      <td className="p-4 text-slate-800 font-medium cursor-pointer hover:text-emerald-600" onClick={() => { setIsEditing(task.id); setFormData(task); }}>{task.name}</td>
                       <td className="p-4 text-slate-500">{projects?.find(p => p.id === task.project_id)?.name || projects?.find(p => p.id === task.project_id)?.client_name || '-'}</td>
                       <td className="p-4 text-slate-500">{phases?.find(p => p.id === task.phase_id)?.name || '-'}</td>
                       <td className="p-4">

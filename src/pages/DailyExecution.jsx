@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import TaskItem from '../components/TaskItem';
-import { Loader2, LayoutList, KanbanSquare } from 'lucide-react';
+import { Loader2, LayoutList, KanbanSquare, Save, X } from 'lucide-react';
 
 export default function DailyExecution() {
+  const queryClient = useQueryClient();
   const [view, setView] = useState('list'); // 'list' or 'kanban'
+  const [isEditing, setIsEditing] = useState(null);
+  const [formData, setFormData] = useState({});
 
   const { data: projects, isLoading: pLoading } = useQuery({ queryKey: ['projects'], queryFn: () => base44.entities.Project.list() });
   const { data: phases, isLoading: phLoading } = useQuery({ queryKey: ['phases'], queryFn: () => base44.entities.Phase.list() });
@@ -34,8 +37,37 @@ export default function DailyExecution() {
     return clients?.find(c => c.id === project?.client_id);
   };
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Task.update(id, data),
+    onSuccess: () => { queryClient.invalidateQueries(['tasks']); setIsEditing(null); }
+  });
+
+  const handleSave = () => {
+    updateMutation.mutate({ id: isEditing, data: formData });
+  };
+
   return (
     <div>
+      {isEditing && (
+        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+            <h2 className="text-xl font-bold text-slate-800 mb-4">עריכת משימה</h2>
+            <div className="space-y-4">
+              <input type="text" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} />
+              <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.priority || 'medium'} onChange={e => setFormData({...formData, priority: e.target.value})}>
+                <option value="high">גבוהה</option>
+                <option value="medium">בינונית</option>
+                <option value="low">נמוכה</option>
+              </select>
+              <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.due_date || ''} onChange={e => setFormData({...formData, due_date: e.target.value})} />
+              <div className="flex gap-2 pt-4">
+                <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
+                <button onClick={() => setIsEditing(null)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><X className="w-4 h-4" /> בטל</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-800 mb-2">ביצוע יומי</h1>
@@ -66,6 +98,7 @@ export default function DailyExecution() {
               project={getProject(task.project_id)} 
               phase={getPhase(task.phase_id)} 
               client={getClient(task.project_id)}
+              onEdit={(t) => { setIsEditing(t.id); setFormData(t); }}
             />
           ))}
           {sortedTasks.length === 0 && (
