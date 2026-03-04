@@ -6,7 +6,7 @@ import { Loader2, ArrowRight, Calendar, AlertCircle, Plus, Edit2, Trash2, Save, 
 import { TimelineView, TableView, CardsView } from '../components/project/PhaseTimeline';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import ModulesEditorInline from '../components/project/ModulesEditorInline';
+import ModulesEditorInline from '@/components/project/ModulesEditorInline';
 
 export default function ProjectDetails() {
   const queryClient = useQueryClient();
