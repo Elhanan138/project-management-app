@@ -138,7 +138,7 @@ export default function Clients() {
         ))}
 
         {combinedData.map(({ client, project }) => (
-          <div key={client.id} className="bg-gradient-to-bl from-white via-white to-emerald-50/30 border border-slate-200/60 rounded-lg shadow-[0_1px_8px_-2px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_20px_-6px_rgba(16,185,129,0.12)] hover:border-emerald-200/60 transition-all duration-300 group overflow-hidden">
+          <div key={client.id} className="relative border border-slate-200/60 rounded-lg shadow-[0_1px_8px_-2px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_20px_-6px_rgba(16,185,129,0.12)] hover:border-emerald-200/60 transition-all duration-300 group overflow-hidden" style={{background: 'linear-gradient(135deg, white 50%, #d1fae5 50%)'}}>
             {isEditing === client.id ? (
               <div className="p-6 space-y-6">
                 <ClientForm formData={formData} setFormData={setFormData} />
