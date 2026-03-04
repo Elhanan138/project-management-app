@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Plus, Edit2, Trash2, X, Save, Briefcase } from 'lucide-react';
 import ClientForm from '../components/clients/ClientForm';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const formatMonthYear = (value) => {
   if (!value) return '-';
@@ -152,7 +154,9 @@ export default function Clients() {
             ) : (
               <div>
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold text-slate-800">{client.name}</h3>
+                  <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="text-xl font-bold text-slate-800 hover:text-emerald-600 transition-colors">
+                    {client.name}
+                  </Link>
                   <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => {
