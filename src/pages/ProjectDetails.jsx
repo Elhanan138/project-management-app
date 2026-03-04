@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ProgressStepper from '../components/ProgressStepper';
-import { Loader2, ArrowRight, Calendar, AlertCircle, Plus, Edit2, Trash2, Save, X, GitCommit, LayoutList, LayoutGrid } from 'lucide-react';
+import { Loader2, ArrowRight, Calendar, AlertCircle, Plus, Edit2, Trash2, Save, X, GitCommit, LayoutList, LayoutGrid, Pencil } from 'lucide-react';
 import { TimelineView, TableView, CardsView } from '../components/project/PhaseTimeline';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import ModulesEditorInline from '../components/project/ModulesEditorInline';
 
 export default function ProjectDetails() {
   const queryClient = useQueryClient();
@@ -15,6 +16,7 @@ export default function ProjectDetails() {
   const [isEditingPhase, setIsEditingPhase] = useState(null);
   const [phaseFormData, setPhaseFormData] = useState({});
   const [ganttView, setGanttView] = useState('timeline');
+  const [editingModules, setEditingModules] = useState(false);
 
   const { data: project, isLoading: pLoading } = useQuery({
     queryKey: ['project', projectId],
@@ -95,13 +97,10 @@ export default function ProjectDetails() {
               <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> יעד: {new Date(project.target_date).toLocaleDateString('he-IL')}</span>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {project.purchased_modules?.map((m, i) => (
-              <span key={i} className="bg-cyan-50 text-cyan-700 border border-cyan-100 px-3 py-1 rounded-lg text-sm font-medium">
-                {m}
-              </span>
-            ))}
-          </div>
+          <ModulesEditorInline
+            modules={project.purchased_modules || []}
+            projectId={project.id}
+          />
         </div>
 
         <div className="px-2 md:px-8 pb-4 overflow-x-auto">
