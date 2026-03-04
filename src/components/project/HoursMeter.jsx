@@ -25,7 +25,7 @@ export default function HoursMeter({ totalUsed, totalPurchased, projectId }) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-emerald-500" />
-          <span className="text-sm font-medium text-slate-700">שעות הטמעה</span>
+          <span className="text-base font-bold text-slate-800">שעות הטמעה</span>
         </div>
         {!isEditing ? (
           <button onClick={() => { setIsEditing(true); setHours(totalPurchased); }} className="text-slate-400 hover:text-emerald-500 p-1 rounded-lg hover:bg-white transition-colors" title="הגדר שעות שנרכשו">
@@ -48,16 +48,26 @@ export default function HoursMeter({ totalUsed, totalPurchased, projectId }) {
         )}
       </div>
 
-      <div className="text-center mb-2">
-        <span className={`text-2xl font-bold ${isOver ? 'text-red-600' : 'text-slate-800'}`}>{totalUsed}</span>
-        <span className="text-slate-400 text-sm"> / {totalPurchased > 0 ? totalPurchased : '—'}</span>
-      </div>
-
-      <div className="bg-slate-200 rounded-full h-2.5 overflow-hidden">
-        <div
-          className={`h-2.5 rounded-full transition-all ${isOver ? 'bg-red-500' : 'bg-emerald-500'}`}
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
+      <div className="flex justify-center my-3">
+        <div className="relative w-24 h-24">
+          <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#e2e8f0" strokeWidth="10" />
+            <circle
+              cx="50" cy="50" r="42"
+              fill="none"
+              stroke={isOver ? '#ef4444' : '#10b981'}
+              strokeWidth="10"
+              strokeLinecap="round"
+              strokeDasharray={`${2 * Math.PI * 42}`}
+              strokeDashoffset={`${2 * Math.PI * 42 * (1 - percentage / 100)}`}
+              className="transition-all duration-500"
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className={`text-lg font-bold leading-tight ${isOver ? 'text-red-600' : 'text-slate-800'}`}>{totalUsed}</span>
+            <span className="text-xs text-slate-400">/ {totalPurchased > 0 ? totalPurchased : '—'}</span>
+          </div>
+        </div>
       </div>
       {isOver && (
         <p className="text-xs text-red-500 mt-2 text-center">חריגה של {(totalUsed - totalPurchased).toFixed(1)} שעות</p>
