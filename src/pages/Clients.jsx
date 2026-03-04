@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Plus, Edit2, Trash2, X, Save, Briefcase } from 'lucide-react';
+import { Loader2, Plus, Edit2, Trash2, X, Save, Briefcase, ImagePlus } from 'lucide-react';
+import { base44 as base44Integration } from '@/api/base44Client';
 import ClientForm from '../components/clients/ClientForm';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -138,7 +139,7 @@ export default function Clients() {
         ))}
 
         {combinedData.map(({ client, project }) => (
-          <div key={client.id} className="relative border border-slate-200/60 rounded-lg shadow-[0_1px_8px_-2px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_20px_-6px_rgba(16,185,129,0.12)] hover:border-emerald-200/60 transition-all duration-300 group overflow-hidden" style={{background: 'linear-gradient(135deg, white 50%, #d1fae5 50%)'}}>
+          <div key={client.id} className="relative border border-slate-200/60 rounded-lg shadow-[0_1px_8px_-2px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_20px_-6px_rgba(16,185,129,0.12)] hover:border-emerald-200/60 transition-all duration-300 group overflow-hidden bg-white">
             {isEditing === client.id ? (
               <div className="p-6 space-y-6">
                 <ClientForm formData={formData} setFormData={setFormData} />
@@ -152,11 +153,43 @@ export default function Clients() {
                 </div>
               </div>
             ) : (
-              <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="block aspect-square p-4 flex flex-col items-center justify-center text-center relative">
-                <span className="text-base font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">
-                  {client.name}
-                </span>
-                <div className="absolute top-2 left-2 flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+              <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="block aspect-square flex flex-col relative">
+                {/* תמונה בחצי העליון */}
+                <div className="h-1/2 bg-slate-100 relative overflow-hidden">
+                  {client.image ? (
+                    <img src={client.image} alt={client.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <label
+                        onClick={(e) => e.stopPropagation()}
+                        className="cursor-pointer text-slate-300 hover:text-emerald-400 transition-colors"
+                      >
+                        <ImagePlus className="w-8 h-8" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const { file_url } = await base44Integration.integrations.Core.UploadFile({ file });
+                            await base44.entities.Client.update(client.id, { image: file_url });
+                            queryClient.invalidateQueries(['clients']);
+                          }}
+                        />
+                      </label>
+                    </div>
+                  )}
+                </div>
+                {/* שם בחצי התחתון */}
+                <div className="h-1/2 flex items-center justify-center text-center px-3">
+                  <span className="text-base font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">
+                    {client.name}
+                  </span>
+                </div>
+                <div className="absolute top-2 left-2 flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity z-10">
                   <button
                     onClick={(e) => {
                       e.preventDefault();
@@ -174,7 +207,7 @@ export default function Clients() {
                         purchased_modules: project?.purchased_modules || []
                       });
                     }}
-                    className="text-slate-400 hover:text-emerald-500 p-1.5 hover:bg-white/80 rounded-lg transition-colors"
+                    className="text-slate-400 hover:text-emerald-500 p-1.5 bg-white/70 hover:bg-white rounded-lg transition-colors"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
@@ -184,7 +217,7 @@ export default function Clients() {
                       e.stopPropagation();
                       deleteClientMutation.mutate(client.id);
                     }}
-                    className="text-slate-400 hover:text-red-500 p-1.5 hover:bg-white/80 rounded-lg transition-colors"
+                    className="text-slate-400 hover:text-red-500 p-1.5 bg-white/70 hover:bg-white rounded-lg transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
