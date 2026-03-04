@@ -192,7 +192,7 @@ export default function Timeline() {
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm">
               <tr>
                 <th className="p-4 font-medium">שם השלב</th>
-                <th className="p-4 font-medium">פרויקט / לקוח</th>
+                <th className="p-4 font-medium">לקוח</th>
                 <th className="p-4 font-medium">סטטוס</th>
                 <th className="p-4 font-medium">התחלה</th>
                 <th className="p-4 font-medium">סיום צפוי</th>
