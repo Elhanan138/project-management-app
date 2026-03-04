@@ -150,13 +150,14 @@ export default function Clients() {
   if (cLoading || pLoading) return <div className="flex justify-center p-12"><Loader2 className="w-8 h-8 animate-spin text-emerald-500" /></div>;
 
   // Combine clients and their projects for display
+  // Also show projects that have no matching client (orphaned projects)
   const combinedData = clients?.map(client => {
     const project = projects?.find(p => p.client_id === client.id);
-    return {
-      client,
-      project
-    };
+    return { client, project };
   }) || [];
+
+  // Find orphaned projects (project has client_id but no matching client exists)
+  const orphanedProjects = projects?.filter(p => p.client_id && !clients?.find(c => c.id === p.client_id)) || [];
 
   return (
     <div className="space-y-6">
