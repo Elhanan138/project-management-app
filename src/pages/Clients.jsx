@@ -224,6 +224,17 @@ export default function Clients() {
           </div>
         )}
 
+        {orphanedProjects.map(project => (
+          <div key={`orphan-${project.id}`} className="bg-amber-50 border border-amber-200 rounded-xl p-6 shadow-sm">
+            <div className="flex items-start gap-3 mb-3">
+              <span className="text-amber-500 text-xs font-semibold bg-amber-100 px-2 py-1 rounded-full">⚠️ לקוח חסר</span>
+            </div>
+            <h3 className="text-lg font-bold text-slate-800">{project.name || project.client_name || 'פרויקט ללא שם'}</h3>
+            <p className="text-slate-500 text-sm mt-1">פרויקט זה מקושר ל-ID לקוח שאינו קיים במערכת</p>
+            <p className="text-xs text-slate-400 mt-2">client_id: {project.client_id}</p>
+          </div>
+        ))}
+
         {combinedData.map(({ client, project }) => (
           <div key={client.id} className="bg-white border border-slate-200 rounded-xl p-6 hover:border-slate-300 hover:shadow-md transition-all duration-300 shadow-sm group">
             {isEditing === client.id ? (
