@@ -165,11 +165,11 @@ export default function Timeline() {
               {sortedPhases.map(phase => {
                 const project = projects?.find(p => p.id === phase.project_id);
                 const client = clients?.find(c => c.id === project?.client_id);
-                const clientName = client?.name || project?.name || 'לקוח לא ידוע';
+                const clientName = client?.name || project?.name;
                 return (
                   <tr key={phase.id} className="hover:bg-slate-50 transition-colors group">
                     <td className="p-4 text-slate-800 font-medium cursor-pointer hover:text-emerald-600" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>{phase.name}</td>
-                    <td className="p-4 text-slate-500">{clientName}</td>
+                    <td className="p-4 text-slate-500">{clientName || ''}</td>
                     <td className="p-4"><span className={`px-2.5 py-1 rounded-md text-xs border ${statusColors[phase.status]}`}>{statusLabels[phase.status]}</span></td>
                     <td className="p-4">
                       <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
