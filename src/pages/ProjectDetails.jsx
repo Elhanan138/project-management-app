@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import ProgressStepper from '../components/ProgressStepper';
+import ProgressStepper from '@/components/ProgressStepper';
 import { Loader2, ArrowRight, Calendar, AlertCircle, Plus, Edit2, Trash2, Save, X, GitCommit, LayoutList, LayoutGrid, Pencil, Clock } from 'lucide-react';
 import { TimelineView, TableView, CardsView } from '../components/project/PhaseTimeline';
 import { Link } from 'react-router-dom';
