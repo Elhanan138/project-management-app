@@ -115,10 +115,10 @@ export default function Clients() {
       {isEditing && (
         <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-end md:items-center justify-center" onClick={() => setIsEditing(null)}>
           <div 
-            className="bg-white rounded-t-2xl md:rounded-2xl p-5 md:p-6 w-full max-w-lg shadow-xl max-h-[85vh] overflow-y-auto"
+            className="bg-white rounded-t-2xl md:rounded-2xl w-full max-w-lg shadow-xl max-h-[92vh] md:max-h-[85vh] flex flex-col"
             onClick={e => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between p-5 pb-3 border-b border-slate-100 shrink-0">
               <h2 className="text-lg font-bold text-slate-800">
                 {isEditing === 'new' ? 'לקוח ופרויקט חדש' : 'עריכת לקוח ופרויקט'}
               </h2>
@@ -126,8 +126,10 @@ export default function Clients() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <ClientForm formData={formData} setFormData={setFormData} />
-            <div className="flex gap-2 pt-5 mt-4 border-t">
+            <div className="flex-1 overflow-y-auto p-5">
+              <ClientForm formData={formData} setFormData={setFormData} />
+            </div>
+            <div className="flex gap-2 p-5 pt-3 border-t border-slate-200 shrink-0">
               <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium">
                 <Save className="w-4 h-4" /> {isEditing === 'new' ? 'שמור הכל' : 'שמור'}
               </button>
