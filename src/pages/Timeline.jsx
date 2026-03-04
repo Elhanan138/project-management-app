@@ -202,14 +202,14 @@ export default function Timeline() {
                   {statusPhases.map(phase => {
                     const project = projects?.find(p => p.id === phase.project_id);
                     const client = clients?.find(c => c.id === project?.client_id);
-                    const clientName = client?.name || project?.name || 'לקוח לא ידוע';
+                    const clientName = client?.name || project?.name;
                     return (
                       <div key={phase.id} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm hover:shadow-md hover:border-slate-300 transition-all group cursor-pointer" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>
                         <div className="flex justify-between items-start mb-1.5">
                           <h4 className="font-semibold text-slate-900 text-sm leading-tight">{phase.name}</h4>
                           <button onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(phase.id); }} className="text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"><Trash2 className="w-3.5 h-3.5" /></button>
                         </div>
-                        <p className="text-slate-500 text-xs font-medium">{clientName}</p>
+                        {clientName && <p className="text-slate-500 text-xs font-medium">{clientName}</p>}
                       </div>
                     );
                   })}
