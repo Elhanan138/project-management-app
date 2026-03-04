@@ -31,6 +31,15 @@ export default function ProjectDetails() {
     queryFn: () => base44.entities.Phase.filter({ project_id: projectId })
   });
 
+  // All phases (from מעקב שלבים) for the dropdown
+  const { data: allPhases } = useQuery({
+    queryKey: ['allPhases'],
+    queryFn: () => base44.entities.Phase.list()
+  });
+
+  // Get unique phase names from the global phases list
+  const phaseNames = [...new Set((allPhases || []).map(p => p.name).filter(Boolean))];
+
   const { data: tasks, isLoading: tLoading } = useQuery({
     queryKey: ['tasks', projectId],
     queryFn: () => base44.entities.Task.filter({ project_id: projectId })
@@ -129,24 +138,16 @@ export default function ProjectDetails() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">שם השלב</label>
-                      <input type="text" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.name || ''} onChange={e => setPhaseFormData({...phaseFormData, name: e.target.value})} />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">תאריך התחלה</label>
-                      <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.start_date || ''} onChange={e => setPhaseFormData({...phaseFormData, start_date: e.target.value})} />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">תאריך סיום צפוי</label>
-                      <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.expected_end_date || ''} onChange={e => setPhaseFormData({...phaseFormData, expected_end_date: e.target.value})} />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
-                      <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.status || 'not_started'} onChange={e => setPhaseFormData({...phaseFormData, status: e.target.value})}>
-                        <option value="not_started">טרם התחיל</option>
-                        <option value="in_progress">בתהליך</option>
-                        <option value="completed">הושלם</option>
-                        <option value="late">מאחר</option>
+                      <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.name || ''} onChange={e => setPhaseFormData({...phaseFormData, name: e.target.value})}>
+                        <option value="">בחר שלב...</option>
+                        {phaseNames.map(name => (
+                          <option key={name} value={name}>{name}</option>
+                        ))}
                       </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">תאריך פגישה</label>
+                      <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_date || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_date: e.target.value})} />
                     </div>
                     <div className="flex gap-2 pt-4">
                       <button onClick={handleSavePhase} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
