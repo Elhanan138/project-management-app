@@ -101,19 +101,17 @@ export default function ProjectDetails() {
               <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> יעד: {new Date(project.target_date).toLocaleDateString('he-IL')}</span>
             </div>
           </div>
-          <HoursMeter
-            totalUsed={totalHoursUsed}
-            totalPurchased={totalHoursPurchased}
-            projectId={project.id}
-          />
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2 items-center">
           <ModulesEditorInline
             modules={project.purchased_modules || []}
             projectId={project.id}
           />
         </div>
+
+        <HoursMeter
+          totalUsed={totalHoursUsed}
+          totalPurchased={totalHoursPurchased}
+          projectId={project.id}
+        />
 
         <div className="px-2 md:px-8 pb-4 overflow-x-auto">
           <ProgressStepper phases={sortedPhases} />
