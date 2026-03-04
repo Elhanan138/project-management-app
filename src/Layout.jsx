@@ -85,13 +85,6 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-            <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
-              <Settings className="w-5 h-5" />
-            </button>
           </div>
         </header>
         <div className="flex-1 p-4 md:p-8 pt-6">
