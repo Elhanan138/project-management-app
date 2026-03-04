@@ -113,9 +113,9 @@ export default function Clients() {
 
       {/* מודאל יצירה/עריכה */}
       {isEditing && (
-        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-end md:items-center justify-center" onClick={() => setIsEditing(null)}>
+        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-stretch md:items-center justify-center" onClick={() => setIsEditing(null)}>
           <div 
-            className="bg-white rounded-t-2xl md:rounded-2xl w-full max-w-lg shadow-xl max-h-[92vh] md:max-h-[85vh] flex flex-col"
+            className="bg-white w-full md:rounded-2xl md:max-w-lg shadow-xl md:max-h-[85vh] flex flex-col"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-5 pb-3 border-b border-slate-100 shrink-0">
