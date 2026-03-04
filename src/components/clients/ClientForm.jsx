@@ -118,47 +118,52 @@ export default function ClientForm({ formData, setFormData }) {
   const inputClass = "w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none";
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="space-y-4">
-        <h3 className="font-medium text-slate-700 border-b pb-2">פרטי לקוח</h3>
-        <input
-          type="text"
-          placeholder="שם הלקוח"
-          className={inputClass}
-          value={formData.client_name || ''}
-          onChange={e => setFormData(prev => ({ ...prev, client_name: e.target.value }))}
-        />
-        <input
-          type="text"
-          placeholder="איש קשר"
-          className={inputClass}
-          value={formData.contact_person || ''}
-          onChange={e => setFormData(prev => ({ ...prev, contact_person: e.target.value }))}
-        />
-        <input
-          type="email"
-          placeholder="דוא״ל"
-          className={inputClass}
-          value={formData.email || ''}
-          onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
-        />
-        <input
-          type="text"
-          placeholder="טלפון"
-          className={inputClass}
-          value={formData.phone || ''}
-          onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-        />
+    <div className="space-y-6">
+      {/* פרטי לקוח */}
+      <div className="space-y-3">
+        <h3 className="font-semibold text-slate-700 border-b pb-2">פרטי לקוח</h3>
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            type="text"
+            placeholder="שם הלקוח"
+            className={inputClass}
+            value={formData.client_name || ''}
+            onChange={e => setFormData(prev => ({ ...prev, client_name: e.target.value }))}
+          />
+          <input
+            type="text"
+            placeholder="איש קשר"
+            className={inputClass}
+            value={formData.contact_person || ''}
+            onChange={e => setFormData(prev => ({ ...prev, contact_person: e.target.value }))}
+          />
+          <input
+            type="email"
+            placeholder="דוא״ל"
+            className={inputClass}
+            value={formData.email || ''}
+            onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+          />
+          <input
+            type="text"
+            placeholder="טלפון"
+            className={inputClass}
+            value={formData.phone || ''}
+            onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+          />
+        </div>
       </div>
-      <div className="space-y-4">
-        <h3 className="font-medium text-slate-700 border-b pb-2">פרטי פרויקט</h3>
-        <div className="grid grid-cols-2 gap-4">
+
+      {/* פרטי פרויקט */}
+      <div className="space-y-3">
+        <h3 className="font-semibold text-slate-700 border-b pb-2">פרטי פרויקט</h3>
+        <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs text-slate-500 mb-1">תאריך Kickoff</label>
             <input
               type="date"
               lang="he"
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+              className={inputClass}
               value={formData.start_date || ''}
               onChange={e => setFormData(prev => ({ ...prev, start_date: e.target.value }))}
             />
@@ -168,14 +173,14 @@ export default function ClientForm({ formData, setFormData }) {
             <input
               type="month"
               lang="he"
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none"
+              className={inputClass}
               value={formData.target_date || ''}
               onChange={e => setFormData(prev => ({ ...prev, target_date: e.target.value }))}
             />
           </div>
         </div>
-        <div className="space-y-1">
-          <label className="block text-xs text-slate-500">מודולים שנרכשו</label>
+        <div>
+          <label className="block text-xs text-slate-500 mb-1">מודולים שנרכשו</label>
           <ModulesEditor
             selected={Array.isArray(formData.purchased_modules) ? formData.purchased_modules : []}
             onChange={val => setFormData(prev => ({ ...prev, purchased_modules: val }))}
