@@ -63,21 +63,59 @@ export default function Home() {
     );
   }
 
+  const activeProjects = projects?.length || 0;
+  const totalTasks = tasks?.length || 0;
+  const completedTasks = tasks?.filter(t => t.is_completed)?.length || 0;
+  const taskProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const latePhases = phases?.filter(p => p.status === 'late')?.length || 0;
+
   return (
-    <div>
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">דשבורד פרויקטים</h1>
-          <p className="text-slate-500">מבט על לכלל הטמעות ה-LMS הפעילות</p>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-1">דשבורד פרויקטים</h1>
+          <p className="text-slate-500 text-sm">מבט על לכלל הטמעות ה-LMS הפעילות</p>
         </div>
         <button
           onClick={() => { setIsEditing('new'); setFormData({}); }}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-colors shadow-sm w-full md:w-auto justify-center"
+          className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-sm w-full md:w-auto justify-center text-sm font-medium"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4" />
           פרויקט חדש
         </button>
       </header>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div className="text-slate-500 text-sm font-medium mb-4">פרויקטים פעילים</div>
+          <div className="flex items-end justify-between">
+            <div className="text-3xl font-bold text-slate-900">{activeProjects}</div>
+            <div className="text-emerald-500 text-sm font-medium bg-emerald-50 px-2 py-1 rounded-md">+2 החודש</div>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div className="text-slate-500 text-sm font-medium mb-4">התקדמות משימות כוללת</div>
+          <div className="flex items-end justify-between">
+            <div className="text-3xl font-bold text-slate-900">{taskProgress}%</div>
+            <div className="text-slate-400 text-sm">{completedTasks} מתוך {totalTasks}</div>
+          </div>
+          <div className="h-1.5 w-full bg-slate-100 rounded-full mt-4 overflow-hidden">
+            <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${taskProgress}%` }} />
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div className="text-slate-500 text-sm font-medium mb-4">שלבים בעיכוב</div>
+          <div className="flex items-end justify-between">
+            <div className="text-3xl font-bold text-slate-900">{latePhases}</div>
+            {latePhases > 0 ? (
+              <div className="text-red-500 text-sm font-medium bg-red-50 px-2 py-1 rounded-md">דורש התייחסות</div>
+            ) : (
+              <div className="text-emerald-500 text-sm font-medium bg-emerald-50 px-2 py-1 rounded-md">הכל תקין</div>
+            )}
+          </div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isEditing && (

@@ -86,19 +86,19 @@ export default function Tasks() {
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800 mb-2 flex items-center gap-3">
-            <CheckSquare className="w-8 h-8 text-emerald-500" />
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-1 flex items-center gap-3">
+            <CheckSquare className="w-7 h-7 text-emerald-500" />
             ניהול משימות
           </h1>
-          <p className="text-slate-500">הקמה ועריכה של כלל המשימות במערכת</p>
+          <p className="text-slate-500 text-sm">ניהול ומעקב אחר כלל המשימות בפרויקטים השונים</p>
         </div>
         <button
           onClick={() => { setIsEditing('new'); setFormData({ priority: 'medium', is_completed: false }); }}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-colors shadow-sm w-full md:w-auto justify-center"
+          className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-sm w-full md:w-auto justify-center text-sm font-medium"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4" />
           משימה חדשה
         </button>
       </header>
