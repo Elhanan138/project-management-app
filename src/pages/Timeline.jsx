@@ -98,34 +98,20 @@ export default function Timeline() {
 
       {view === 'timeline' && (
         <div className="relative border-r-2 border-emerald-200 mr-4 pr-6 space-y-8 py-4">
-          {sortedPhases.map((phase, index) => {
-          const project = projects?.find(p => p.id === phase.project_id);
-          const client = clients?.find(c => c.id === project?.client_id);
-          const clientName = client?.name || project?.name;
-
-          return (
+          {sortedPhases.map((phase) => (
             <div key={phase.id} className="relative group">
-              {/* Timeline dot */}
               <div className="absolute -right-[35px] top-4 w-4 h-4 rounded-full bg-emerald-500 border-4 border-white shadow-sm" />
-              
               <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all hover:border-emerald-300">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-800">{phase.name}</h3>
-                    {clientName && <p className="text-emerald-600 font-medium">{clientName}</p>}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500 p-1.5 bg-slate-50 rounded-lg"><Edit2 className="w-4 h-4" /></button>
-                      <button onClick={() => deleteMutation.mutate(phase.id)} className="text-slate-400 hover:text-red-500 p-1.5 bg-slate-50 rounded-lg"><Trash2 className="w-4 h-4" /></button>
-                    </div>
+                <div className="flex justify-between items-center gap-4">
+                  <h3 className="text-lg font-bold text-slate-800">{phase.name}</h3>
+                  <div className="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500 p-1.5 bg-slate-50 rounded-lg"><Edit2 className="w-4 h-4" /></button>
+                    <button onClick={() => deleteMutation.mutate(phase.id)} className="text-slate-400 hover:text-red-500 p-1.5 bg-slate-50 rounded-lg"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </div>
               </div>
             </div>
-          );
-        })}
-        
+          ))}
           {sortedPhases.length === 0 && (
             <div className="text-slate-500 py-8">אין שלבים להצגה.</div>
           )}
@@ -138,19 +124,13 @@ export default function Timeline() {
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm">
               <tr>
                 <th className="p-4 font-medium">שם השלב</th>
-                <th className="p-4 font-medium">לקוחות שבשלב זה</th>
                 <th className="p-4 font-medium w-24">פעולות</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {sortedPhases.map(phase => {
-                const project = projects?.find(p => p.id === phase.project_id);
-                const client = clients?.find(c => c.id === project?.client_id);
-                const clientName = client?.name || project?.name;
-                return (
+              {sortedPhases.map(phase => (
                   <tr key={phase.id} className="hover:bg-slate-50 transition-colors group">
                     <td className="p-4 text-slate-800 font-medium cursor-pointer hover:text-emerald-600" onClick={() => { setIsEditing(phase.id); setFormData(phase); }}>{phase.name}</td>
-                    <td className="p-4 text-slate-500">{clientName || ''}</td>
                     <td className="p-4">
                       <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                         <button onClick={() => { setIsEditing(phase.id); setFormData(phase); }} className="text-slate-400 hover:text-emerald-500"><Edit2 className="w-4 h-4" /></button>
@@ -158,8 +138,7 @@ export default function Timeline() {
                       </div>
                     </td>
                   </tr>
-                );
-              })}
+              ))}
             </tbody>
           </table>
         </div>

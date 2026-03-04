@@ -93,28 +93,32 @@ export default function ProjectDetails() {
       </Link>
 
       <header className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 md:p-8 mb-8">
-        <div className="flex flex-col md:flex-row justify-between items-start mb-6 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-800 mb-2">{project.name || client?.name || project.client_name || 'פרויקט ללא שם'}</h1>
-            <div className="flex flex-wrap gap-4 text-sm text-slate-500">
-              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> התחלה: {new Date(project.start_date).toLocaleDateString('he-IL')}</span>
-              <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> יעד: {new Date(project.target_date).toLocaleDateString('he-IL')}</span>
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex-1">
+            <div className="flex flex-col md:flex-row justify-between items-start mb-6 gap-4">
+              <div>
+                <h1 className="text-3xl font-bold text-slate-800 mb-2">{project.name || client?.name || project.client_name || 'פרויקט ללא שם'}</h1>
+                <div className="flex flex-wrap gap-4 text-sm text-slate-500">
+                  <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> התחלה: {new Date(project.start_date).toLocaleDateString('he-IL')}</span>
+                  <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> יעד: {new Date(project.target_date).toLocaleDateString('he-IL')}</span>
+                </div>
+              </div>
+              <ModulesEditorInline
+                modules={project.purchased_modules || []}
+                projectId={project.id}
+              />
+            </div>
+            <div className="px-2 md:px-8 pb-4 overflow-x-auto">
+              <ProgressStepper phases={sortedPhases} />
             </div>
           </div>
-          <ModulesEditorInline
-            modules={project.purchased_modules || []}
-            projectId={project.id}
-          />
-        </div>
-
-        <HoursMeter
-          totalUsed={totalHoursUsed}
-          totalPurchased={totalHoursPurchased}
-          projectId={project.id}
-        />
-
-        <div className="px-2 md:px-8 pb-4 overflow-x-auto">
-          <ProgressStepper phases={sortedPhases} />
+          <div className="md:w-56 flex-shrink-0">
+            <HoursMeter
+              totalUsed={totalHoursUsed}
+              totalPurchased={totalHoursPurchased}
+              projectId={project.id}
+            />
+          </div>
         </div>
       </header>
 
