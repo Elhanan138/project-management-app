@@ -49,7 +49,7 @@ export default function HoursMeter({ totalUsed, totalPurchased, projectId }) {
       </div>
 
       <div className="flex justify-center my-3">
-        <div className="relative w-28 h-28">
+        <div className="relative w-36 h-36">
           <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="42" fill="none" stroke="#e2e8f0" strokeWidth="10" />
             <circle
@@ -64,8 +64,8 @@ export default function HoursMeter({ totalUsed, totalPurchased, projectId }) {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`text-xl font-bold leading-tight ${isOver ? 'text-red-600' : 'text-slate-800'}`}>{totalUsed}</span>
-            <span className="text-xs text-slate-400">/ {totalPurchased > 0 ? totalPurchased : '—'}</span>
+            <span className={`text-2xl font-bold leading-tight ${isOver ? 'text-red-600' : 'text-slate-800'}`}>{totalUsed}</span>
+            <span className="text-sm text-slate-400">/ {totalPurchased > 0 ? totalPurchased : '—'}</span>
           </div>
         </div>
       </div>
