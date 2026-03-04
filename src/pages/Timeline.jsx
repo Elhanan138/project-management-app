@@ -80,13 +80,6 @@ export default function Timeline() {
             <button onClick={() => setView('list')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'list' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="רשימה"><LayoutList className="w-5 h-5" /></button>
             <button onClick={() => setView('kanban')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'kanban' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="קנבן"><KanbanSquare className="w-5 h-5" /></button>
           </div>
-          <button
-            onClick={() => { setIsEditing('new'); setFormData({ status: 'not_started' }); }}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition-colors shadow-sm w-full md:w-auto justify-center"
-          >
-            <Plus className="w-5 h-5" />
-            שלב חדש
-          </button>
         </div>
       </header>
 
@@ -94,29 +87,11 @@ export default function Timeline() {
       {isEditing && (
         <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
-            <h2 className="text-xl font-bold text-slate-800 mb-4">{isEditing === 'new' ? 'שלב חדש' : 'עריכת שלב'}</h2>
+            <h2 className="text-xl font-bold text-slate-800 mb-4">עדכון סטטוס שלב</h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">שם השלב</label>
-                <input type="text" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">לקוח</label>
-                <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.project_id || ''} onChange={e => setFormData({...formData, project_id: e.target.value})}>
-                  <option value="">בחר לקוח...</option>
-                  {projects?.map(p => {
-                    const client = clients?.find(c => c.id === p.client_id);
-                    return <option key={p.id} value={p.id}>{client?.name || p.name || 'לקוח ללא שם'}</option>;
-                  })}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">תאריך התחלה</label>
-                <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.start_date || ''} onChange={e => setFormData({...formData, start_date: e.target.value})} />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">תאריך סיום צפוי</label>
-                <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.expected_end_date || ''} onChange={e => setFormData({...formData, expected_end_date: e.target.value})} />
+                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-500 outline-none" value={formData.name || ''} disabled />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
