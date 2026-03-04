@@ -173,12 +173,7 @@ export default function Tasks() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">תאריך יעד</label>
                 <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.due_date || ''} onChange={e => setFormData({...formData, due_date: e.target.value})} />
               </div>
-              {isEditing !== 'new' && (
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" id="is_completed" checked={formData.is_completed || false} onChange={e => setFormData({...formData, is_completed: e.target.checked})} className="w-4 h-4 accent-emerald-500" />
-                  <label htmlFor="is_completed" className="text-sm font-medium text-slate-700">משימה הושלמה</label>
-                </div>
-              )}
+
               <div className="flex gap-2 pt-4">
                 <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
                 <button onClick={() => setIsEditing(null)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><X className="w-4 h-4" /> בטל</button>
