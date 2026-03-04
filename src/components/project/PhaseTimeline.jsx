@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit2, Trash2, Calendar, AlertCircle } from 'lucide-react';
+import { Edit2, Trash2, Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const statusConfig = {
   completed: { color: 'bg-emerald-500', border: 'border-emerald-200', text: 'text-emerald-700', bg: 'bg-emerald-50', label: 'הושלם' },
@@ -9,7 +9,7 @@ const statusConfig = {
 };
 
 // Timeline View - vertical timeline with meeting dates
-export function TimelineView({ phases, tasks, onEdit, onDelete }) {
+export function TimelineView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
   return (
     <div className="relative border-r-2 border-emerald-200 mr-6 pr-8 space-y-6 py-2">
       {phases.map((phase) => {
@@ -38,6 +38,9 @@ export function TimelineView({ phases, tasks, onEdit, onDelete }) {
                   )}
                 </div>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {phase.status !== 'completed' && (
+                    <button onClick={() => onStatusChange(phase.id, 'completed')} className="text-slate-400 hover:text-emerald-600 p-1.5 rounded-lg hover:bg-slate-50" title="סמן כבוצע"><CheckCircle2 className="w-3.5 h-3.5" /></button>
+                  )}
                   <button onClick={() => onEdit(phase)} className="text-slate-400 hover:text-emerald-600 p-1.5 rounded-lg hover:bg-slate-50"><Edit2 className="w-3.5 h-3.5" /></button>
                   <button onClick={() => onDelete(phase.id)} className="text-slate-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-slate-50"><Trash2 className="w-3.5 h-3.5" /></button>
                 </div>
@@ -52,7 +55,7 @@ export function TimelineView({ phases, tasks, onEdit, onDelete }) {
 }
 
 // Table View
-export function TableView({ phases, tasks, onEdit, onDelete }) {
+export function TableView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
   return (
     <div className="border border-slate-200 rounded-xl overflow-hidden">
       <table className="w-full text-right">
@@ -82,6 +85,9 @@ export function TableView({ phases, tasks, onEdit, onDelete }) {
                 <td className="px-4 py-3 text-sm text-slate-500">{completedTasks}/{phaseTasks.length}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {phase.status !== 'completed' && (
+                      <button onClick={() => onStatusChange(phase.id, 'completed')} className="text-slate-400 hover:text-emerald-600 p-1" title="סמן כבוצע"><CheckCircle2 className="w-3.5 h-3.5" /></button>
+                    )}
                     <button onClick={() => onEdit(phase)} className="text-slate-400 hover:text-emerald-600 p-1"><Edit2 className="w-3.5 h-3.5" /></button>
                     <button onClick={() => onDelete(phase.id)} className="text-slate-400 hover:text-red-500 p-1"><Trash2 className="w-3.5 h-3.5" /></button>
                   </div>
@@ -97,7 +103,7 @@ export function TableView({ phases, tasks, onEdit, onDelete }) {
 }
 
 // Cards View
-export function CardsView({ phases, tasks, onEdit, onDelete }) {
+export function CardsView({ phases, tasks, onEdit, onDelete, onStatusChange }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {phases.map(phase => {
@@ -114,6 +120,9 @@ export function CardsView({ phases, tasks, onEdit, onDelete }) {
                 <span className={`text-xs px-2 py-0.5 rounded-full ${cfg.bg} ${cfg.text} font-medium`}>{cfg.label}</span>
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                {phase.status !== 'completed' && (
+                  <button onClick={() => onStatusChange(phase.id, 'completed')} className="text-slate-400 hover:text-emerald-600 p-1" title="סמן כבוצע"><CheckCircle2 className="w-3.5 h-3.5" /></button>
+                )}
                 <button onClick={() => onEdit(phase)} className="text-slate-400 hover:text-emerald-600 p-1"><Edit2 className="w-3.5 h-3.5" /></button>
                 <button onClick={() => onDelete(phase.id)} className="text-slate-400 hover:text-red-500 p-1"><Trash2 className="w-3.5 h-3.5" /></button>
               </div>
