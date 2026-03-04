@@ -62,7 +62,14 @@ export default function Timeline() {
           </h1>
           <p className="text-slate-500">מעקב אחר כלל שלבי ההטמעה בכל הפרויקטים</p>
         </div>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+        <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+          <button
+            onClick={() => { setIsEditing('new'); setFormData({ status: 'not_started' }); }}
+            className="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all shadow-sm w-full md:w-auto justify-center text-sm font-medium"
+          >
+            <Plus className="w-4 h-4" />
+            שלב חדש
+          </button>
           <div className="flex bg-white rounded-xl p-1 border border-slate-200 shadow-sm w-full md:w-auto">
             <button onClick={() => setView('timeline')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'timeline' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="טיימליין"><GitCommit className="w-5 h-5" /></button>
             <button onClick={() => setView('list')} className={`flex-1 md:flex-none p-2 rounded-lg transition-colors flex justify-center ${view === 'list' ? 'bg-emerald-50 text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="רשימה"><LayoutList className="w-5 h-5" /></button>
