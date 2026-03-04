@@ -86,7 +86,7 @@ const ModulesEditor = ({ selected = [], onChange }) => {
                     <span className="text-sm text-slate-700">{option}</span>
                   </label>
                   <button
-                    onClick={(e) => { e.stopPropagation(); removeModule(option); }}
+                    onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); removeModule(option); }}
                     className="text-slate-300 hover:text-red-400 opacity-0 group-hover/item:opacity-100 transition-opacity p-0.5"
                   >
                     <X className="w-3.5 h-3.5" />
