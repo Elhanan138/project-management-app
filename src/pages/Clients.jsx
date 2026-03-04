@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Loader2, Plus, Edit2, Trash2, X, Save, Briefcase, ImagePlus } from 'lucide-react';
-import { base44 as base44Integration } from '@/api/base44Client';
+import { base44 as base44SDK } from '@/api/base44Client';
 import ClientForm from '../components/clients/ClientForm';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -174,8 +174,8 @@ export default function Clients() {
                             e.stopPropagation();
                             const file = e.target.files?.[0];
                             if (!file) return;
-                            const { file_url } = await base44Integration.integrations.Core.UploadFile({ file });
-                            await base44.entities.Client.update(client.id, { image: file_url });
+                            const { file_url } = await base44SDK.integrations.Core.UploadFile({ file });
+                            await base44SDK.entities.Client.update(client.id, { image: file_url });
                             queryClient.invalidateQueries(['clients']);
                           }}
                         />
