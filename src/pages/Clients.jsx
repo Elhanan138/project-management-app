@@ -222,7 +222,6 @@ export default function Clients() {
                   </button>
                 </div>
               </Link>
-            )}
           </div>
         ))}
       </div>
