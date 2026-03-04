@@ -1,7 +1,63 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Loader2, Plus, Edit2, Trash2, X, Save, Briefcase } from 'lucide-react';
+import { Loader2, Plus, Edit2, Trash2, X, Save, Briefcase, ChevronDown } from 'lucide-react';
+
+const AVAILABLE_MODULES = [
+  'ניהול משתמשים',
+  'קורסים מקוונים',
+  'מבחנים והסמכות',
+  'דוחות ואנליטיקה',
+  'ניהול אירועי הדרכה',
+  'משחוק',
+  'אוטומציות',
+  'התממשקות HR'
+];
+
+const MultiSelectDropdown = ({ selected = [], onChange, options }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const toggleOption = (option) => {
+    if (selected.includes(option)) {
+      onChange(selected.filter(item => item !== option));
+    } else {
+      onChange([...selected, option]);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <div 
+        className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 cursor-pointer flex justify-between items-center focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="truncate text-sm">
+          {selected.length > 0 ? selected.join(', ') : 'בחר מודולים...'}
+        </span>
+        <ChevronDown className="w-4 h-4 text-slate-400" />
+      </div>
+      
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 max-h-60 overflow-y-auto py-1">
+            {options.map(option => (
+              <label key={option} className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 cursor-pointer transition-colors">
+                <input 
+                  type="checkbox" 
+                  className="w-4 h-4 accent-emerald-500 rounded border-slate-300"
+                  checked={selected.includes(option)}
+                  onChange={() => toggleOption(option)}
+                />
+                <span className="text-sm text-slate-700">{option}</span>
+              </label>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 export default function Clients() {
   const queryClient = useQueryClient();
@@ -136,17 +192,24 @@ export default function Clients() {
               <div className="space-y-4">
                 <h3 className="font-medium text-slate-700 border-b pb-2">פרטי פרויקט</h3>
                 <input type="text" placeholder="שם הפרויקט" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.project_name || ''} onChange={e => setFormData({ ...formData, project_name: e.target.value })} />
-                <div className="flex gap-4">
-                  <div className="flex-1">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                  <div>
                     <label className="block text-xs text-slate-500 mb-1">תאריך התחלה</label>
-                    <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.start_date || ''} onChange={e => setFormData({ ...formData, start_date: e.target.value })} />
+                    <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.start_date || ''} onChange={e => setFormData({ ...formData, start_date: e.target.value })} />
                   </div>
-                  <div className="flex-1">
+                  <div>
                     <label className="block text-xs text-slate-500 mb-1">תאריך יעד</label>
-                    <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.target_date || ''} onChange={e => setFormData({ ...formData, target_date: e.target.value })} />
+                    <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.target_date || ''} onChange={e => setFormData({ ...formData, target_date: e.target.value })} />
                   </div>
                 </div>
-                <input type="text" placeholder="מודולים נרכשים (מופרדים בפסיק)" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.purchased_modules || ''} onChange={e => setFormData({ ...formData, purchased_modules: e.target.value })} />
+                <div className="space-y-1">
+                  <label className="block text-xs text-slate-500">מודולים נרכשים</label>
+                  <MultiSelectDropdown 
+                    options={AVAILABLE_MODULES} 
+                    selected={Array.isArray(formData.purchased_modules) ? formData.purchased_modules : []} 
+                    onChange={val => setFormData({ ...formData, purchased_modules: val })} 
+                  />
+                </div>
               </div>
             </div>
             <div className="flex gap-2 pt-6 mt-4 border-t">
@@ -218,7 +281,7 @@ export default function Clients() {
                           project_name: project?.name,
                           start_date: project?.start_date,
                           target_date: project?.target_date,
-                          purchased_modules: project?.purchased_modules?.join(', ') || ''
+                          purchased_modules: project?.purchased_modules || []
                         }); 
                       }} 
                       className="text-slate-400 hover:text-emerald-500 p-1 bg-slate-50 rounded-lg"
