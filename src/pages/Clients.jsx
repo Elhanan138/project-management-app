@@ -138,9 +138,9 @@ export default function Clients() {
         ))}
 
         {combinedData.map(({ client, project }) => (
-          <div key={client.id} className="bg-white border border-slate-200 rounded-xl p-6 hover:border-slate-300 hover:shadow-md transition-all duration-300 shadow-sm group">
+          <div key={client.id} className="bg-white border border-slate-200 rounded-2xl hover:border-emerald-200 hover:shadow-lg transition-all duration-300 shadow-sm group overflow-hidden">
             {isEditing === client.id ? (
-              <div className="space-y-6">
+              <div className="p-6 space-y-6">
                 <ClientForm formData={formData} setFormData={setFormData} />
                 <div className="flex gap-2 pt-4 border-t">
                   <button onClick={handleSave} className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl flex items-center gap-2 transition-colors">
@@ -152,35 +152,51 @@ export default function Clients() {
                 </div>
               </div>
             ) : (
-              <div className="flex justify-between items-center">
-                <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="text-xl font-bold text-slate-800 hover:text-emerald-600 transition-colors">
-                  {client.name}
-                </Link>
-                <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => {
-                      setIsEditing(client.id);
-                      setFormData({
-                        client_id: client.id,
-                        client_name: client.name,
-                        contact_person: client.contact_person,
-                        email: client.email,
-                        phone: client.phone,
-                        project_id: project?.id,
-                        start_date: project?.start_date,
-                        target_date: project?.target_date,
-                        purchased_modules: project?.purchased_modules || []
-                      });
-                    }}
-                    className="text-slate-400 hover:text-emerald-500 p-1 bg-slate-50 rounded-lg"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button onClick={() => deleteClientMutation.mutate(client.id)} className="text-slate-400 hover:text-red-500 p-1 bg-slate-50 rounded-lg">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+              <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="block p-6">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold text-lg flex-shrink-0">
+                      {client.name?.charAt(0) || '?'}
+                    </div>
+                    <span className="text-lg font-bold text-slate-800 group-hover:text-emerald-600 transition-colors">
+                      {client.name}
+                    </span>
+                  </div>
+                  <div className="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsEditing(client.id);
+                        setFormData({
+                          client_id: client.id,
+                          client_name: client.name,
+                          contact_person: client.contact_person,
+                          email: client.email,
+                          phone: client.phone,
+                          project_id: project?.id,
+                          start_date: project?.start_date,
+                          target_date: project?.target_date,
+                          purchased_modules: project?.purchased_modules || []
+                        });
+                      }}
+                      className="text-slate-400 hover:text-emerald-500 p-2 bg-slate-50 hover:bg-emerald-50 rounded-xl transition-colors"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        deleteClientMutation.mutate(client.id);
+                      }}
+                      className="text-slate-400 hover:text-red-500 p-2 bg-slate-50 hover:bg-red-50 rounded-xl transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </Link>
             )}
           </div>
         ))}
