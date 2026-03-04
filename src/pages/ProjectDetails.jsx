@@ -174,10 +174,21 @@ export default function ProjectDetails() {
                   <label className="block text-sm font-medium text-slate-700 mb-1">תאריך פגישה</label>
                   <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_date || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_date: e.target.value})} />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">משך פגישה (שעות)</label>
-                  <input type="number" step="0.5" min="0" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.duration_hours || ''} onChange={e => setPhaseFormData({...phaseFormData, duration_hours: parseFloat(e.target.value) || 0})} placeholder="לדוגמה: 1.5" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">שעת התחלה</label>
+                    <input type="time" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_start_time || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_start_time: e.target.value})} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">שעת סיום</label>
+                    <input type="time" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_end_time || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_end_time: e.target.value})} />
+                  </div>
                 </div>
+                {phaseFormData.meeting_start_time && phaseFormData.meeting_end_time && (
+                  <p className="text-xs text-slate-400">
+                    משך: {calcDuration(phaseFormData.meeting_start_time, phaseFormData.meeting_end_time)} שעות
+                  </p>
+                )}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
                   <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.status || 'not_started'} onChange={e => setPhaseFormData({...phaseFormData, status: e.target.value})}>
