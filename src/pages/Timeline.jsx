@@ -8,7 +8,7 @@ export default function Timeline() {
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(null);
   const [formData, setFormData] = useState({});
-  const [view, setView] = useState('timeline');
+
 
   const { data: projects, isLoading: projectsLoading } = useQuery({
     queryKey: ['projects'],
