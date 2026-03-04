@@ -116,7 +116,7 @@ export default function Timeline() {
           {sortedPhases.map((phase, index) => {
           const project = projects?.find(p => p.id === phase.project_id);
           const client = clients?.find(c => c.id === project?.client_id);
-          const clientName = client?.name || project?.name || 'לקוח לא ידוע';
+          const clientName = client?.name || project?.name;
 
           return (
             <div key={phase.id} className="relative group">
@@ -127,7 +127,7 @@ export default function Timeline() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div>
                     <h3 className="text-lg font-bold text-slate-800">{phase.name}</h3>
-                    <p className="text-emerald-600 font-medium">{clientName}</p>
+                    {clientName && <p className="text-emerald-600 font-medium">{clientName}</p>}
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={`px-3 py-1 rounded-lg text-sm font-medium border ${statusColors[phase.status]}`}>
