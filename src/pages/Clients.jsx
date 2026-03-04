@@ -139,7 +139,7 @@ export default function Clients() {
 
         {combinedData.map(({ client, project }) => (
           <div key={client.id} className="relative border border-slate-200/60 rounded-lg shadow-[0_1px_8px_-2px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_20px_-6px_rgba(16,185,129,0.12)] hover:border-emerald-200/60 transition-all duration-300 group overflow-hidden bg-white">
-            {isEditing === client.id ? null : (
+            {(
               <Link to={project ? createPageUrl(`ProjectDetails?id=${project.id}`) : '#'} className="block aspect-square flex flex-col relative">
                 {/* תמונה בחצי העליון */}
                 <div className="h-1/2 bg-slate-100 relative overflow-hidden">
