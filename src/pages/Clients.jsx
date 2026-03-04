@@ -129,7 +129,7 @@ export default function Clients() {
             <div className="flex-1 overflow-y-auto p-5">
               <ClientForm formData={formData} setFormData={setFormData} />
             </div>
-            <div className="flex gap-2 p-5 pt-3 border-t border-slate-200 shrink-0">
+            <div className="flex gap-2 p-5 pt-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] border-t border-slate-200 shrink-0">
               <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl flex items-center justify-center gap-2 transition-colors font-medium">
                 <Save className="w-4 h-4" /> {isEditing === 'new' ? 'שמור הכל' : 'שמור'}
               </button>
