@@ -90,29 +90,48 @@ export default function Timeline() {
         </div>
       </header>
 
+      {/* Modal */}
       {isEditing && (
-        <div className="bg-white border border-emerald-200 rounded-2xl p-6 shadow-md mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <input type="text" placeholder="שם השלב" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.name || ''} onChange={e => setFormData({ ...formData, name: e.target.value })} />
-            <select className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.project_id || ''} onChange={e => setFormData({ ...formData, project_id: e.target.value })}>
-              <option value="">בחר פרויקט...</option>
-              {projects?.map(p => {
-                const client = clients?.find(c => c.id === p.client_id);
-                return <option key={p.id} value={p.id}>{p.name || client?.name || 'פרויקט ללא שם'}</option>;
-              })}
-            </select>
-            <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.start_date || ''} onChange={e => setFormData({ ...formData, start_date: e.target.value })} />
-            <input type="date" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.expected_end_date || ''} onChange={e => setFormData({ ...formData, expected_end_date: e.target.value })} />
-            <select className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all" value={formData.status || 'not_started'} onChange={e => setFormData({ ...formData, status: e.target.value })}>
-              <option value="not_started">טרם התחיל</option>
-              <option value="in_progress">בתהליך</option>
-              <option value="completed">הושלם</option>
-              <option value="late">מאחר</option>
-            </select>
-          </div>
-          <div className="flex gap-2 pt-4">
-            <button onClick={handleSave} className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
-            <button onClick={() => setIsEditing(null)} className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><X className="w-4 h-4" /> בטל</button>
+        <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+            <h2 className="text-xl font-bold text-slate-800 mb-4">{isEditing === 'new' ? 'שלב חדש' : 'עריכת שלב'}</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">שם השלב</label>
+                <input type="text" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">פרויקט</label>
+                <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.project_id || ''} onChange={e => setFormData({...formData, project_id: e.target.value})}>
+                  <option value="">בחר פרויקט...</option>
+                  {projects?.map(p => {
+                    const client = clients?.find(c => c.id === p.client_id);
+                    return <option key={p.id} value={p.id}>{p.name || client?.name || 'פרויקט ללא שם'}</option>;
+                  })}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">תאריך התחלה</label>
+                <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.start_date || ''} onChange={e => setFormData({...formData, start_date: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">תאריך סיום צפוי</label>
+                <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.expected_end_date || ''} onChange={e => setFormData({...formData, expected_end_date: e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
+                <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.status || 'not_started'} onChange={e => setFormData({...formData, status: e.target.value})}>
+                  <option value="not_started">טרם התחיל</option>
+                  <option value="in_progress">בתהליך</option>
+                  <option value="completed">הושלם</option>
+                  <option value="late">מאחר</option>
+                </select>
+              </div>
+              <div className="flex gap-2 pt-4">
+                <button onClick={handleSave} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
+                <button onClick={() => setIsEditing(null)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><X className="w-4 h-4" /> בטל</button>
+              </div>
+            </div>
           </div>
         </div>
       )}
