@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ProgressStepper from '../components/ProgressStepper';
-import { Loader2, ArrowRight, Calendar, AlertCircle, Plus, Edit2, Trash2, Save, X, GitCommit, LayoutList, LayoutGrid, Pencil } from 'lucide-react';
+import { Loader2, ArrowRight, Calendar, AlertCircle, Plus, Edit2, Trash2, Save, X, GitCommit, LayoutList, LayoutGrid, Pencil, Clock } from 'lucide-react';
 import { TimelineView, TableView, CardsView } from '../components/project/PhaseTimeline';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -75,6 +75,9 @@ export default function ProjectDetails() {
 
   if (!project) return <div>Project not found</div>;
 
+  const totalHoursUsed = (phases || []).reduce((sum, p) => sum + (p.duration_hours || 0), 0);
+  const totalHoursPurchased = project.total_hours_purchased || 0;
+
   const sortedPhases = [...(phases || [])].sort((a, b) => {
     const aDate = a.meeting_date || a.start_date || '';
     const bDate = b.meeting_date || b.start_date || '';
@@ -97,6 +100,14 @@ export default function ProjectDetails() {
               <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> יעד: {new Date(project.target_date).toLocaleDateString('he-IL')}</span>
             </div>
           </div>
+          <HoursMeter
+            totalUsed={totalHoursUsed}
+            totalPurchased={totalHoursPurchased}
+            projectId={project.id}
+          />
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2 items-center">
           <ModulesEditorInline
             modules={project.purchased_modules || []}
             projectId={project.id}
@@ -147,6 +158,10 @@ export default function ProjectDetails() {
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">תאריך פגישה</label>
                   <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_date || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_date: e.target.value})} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">משך פגישה (שעות)</label>
+                  <input type="number" step="0.5" min="0" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.duration_hours || ''} onChange={e => setPhaseFormData({...phaseFormData, duration_hours: parseFloat(e.target.value) || 0})} placeholder="לדוגמה: 1.5" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
