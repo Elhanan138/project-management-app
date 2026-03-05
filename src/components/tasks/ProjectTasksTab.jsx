@@ -124,13 +124,7 @@ export default function ProjectTasksTab() {
                   {projects?.map(p => <option key={p.id} value={p.id}>{p.name || p.client_name}</option>)}
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">שלב</label>
-                <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.phase_id || ''} onChange={e => setFormData({...formData, phase_id: e.target.value})}>
-                  <option value="">בחר שלב...</option>
-                  {phases?.filter(p => p.project_id === formData.project_id).map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-                </select>
-              </div>
+
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">עדיפות</label>
                 <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={formData.priority || 'medium'} onChange={e => setFormData({...formData, priority: e.target.value})}>
