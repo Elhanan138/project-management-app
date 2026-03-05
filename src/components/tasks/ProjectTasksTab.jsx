@@ -89,10 +89,6 @@ export default function ProjectTasksTab() {
           <option value="">כל הפרויקטים</option>
           {projects?.map(p => <option key={p.id} value={p.id}>{p.name || p.client_name}</option>)}
         </select>
-        <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-800 focus:border-emerald-500 outline-none" value={filters.phase_id} onChange={e => setFilters({...filters, phase_id: e.target.value})} disabled={!filters.project_id}>
-          <option value="">כל השלבים</option>
-          {phases?.filter(p => p.project_id === filters.project_id).map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
         <select className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-sm text-slate-800 focus:border-emerald-500 outline-none" value={filters.status} onChange={e => setFilters({...filters, status: e.target.value})}>
           <option value="">כל הסטטוסים</option>
           <option value="open">פתוחות</option>
