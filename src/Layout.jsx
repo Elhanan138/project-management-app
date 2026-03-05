@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { LayoutDashboard, CheckSquare, Briefcase, Users, Menu, X, Layers, PanelRightClose, PanelRightOpen } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Briefcase, Users, Menu, X, Layers, ChevronRight, ChevronLeft } from 'lucide-react';
 
 export default function Layout({ children, currentPageName }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -70,18 +70,30 @@ export default function Layout({ children, currentPageName }) {
             );
           })}
         </nav>
+        <div className="hidden md:block p-3 border-t border-slate-200">
+          <button
+            onClick={() => setIsDesktopSidebarOpen(false)}
+            className="flex items-center gap-2 w-full px-4 py-2.5 rounded-xl text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all text-sm"
+          >
+            <ChevronRight className="w-4 h-4" />
+            <span>הסתר תפריט</span>
+          </button>
+        </div>
       </aside>
+
+      {/* Desktop sidebar collapsed tab */}
+      {!isDesktopSidebarOpen && (
+        <button
+          onClick={() => setIsDesktopSidebarOpen(true)}
+          className="hidden md:flex fixed top-1/2 -translate-y-1/2 right-0 z-[60] bg-white border border-slate-200 border-r-0 rounded-l-lg p-2 py-4 text-slate-400 hover:text-emerald-600 transition-colors shadow-sm"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+      )}
 
       {/* Main Content */}
       <main className={`${isDesktopSidebarOpen ? 'md:mr-64' : 'md:mr-0'} transition-[margin] duration-300 flex flex-col min-h-screen`}>
-        {/* Desktop toggle button */}
-        <button
-          onClick={() => setIsDesktopSidebarOpen(!isDesktopSidebarOpen)}
-          className="hidden md:flex fixed top-4 right-4 z-[60] bg-white border border-slate-200 rounded-lg p-2 text-slate-500 hover:text-emerald-600 hover:border-emerald-200 transition-colors shadow-sm"
-          style={{ right: isDesktopSidebarOpen ? '17rem' : '1rem' }}
-        >
-          {isDesktopSidebarOpen ? <PanelRightClose className="w-5 h-5" /> : <PanelRightOpen className="w-5 h-5" />}
-        </button>
+
 
         <div className="flex-1 p-4 md:p-8 pt-6">
           <div className="max-w-7xl mx-auto">
