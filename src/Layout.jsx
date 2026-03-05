@@ -23,10 +23,10 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans rtl">
       {/* Mobile Header */}
       <div className="md:hidden bg-white border-b border-slate-200 p-4 flex justify-between items-center sticky top-0 z-40 shadow-sm">
-        <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2">
+        <Link to={createPageUrl('Home')} className="text-xl font-bold text-emerald-600 flex items-center gap-2 hover:opacity-80 transition-opacity">
           <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a59f1c1b4a544303ab2e4e/dab183c0c_blossom-favicon.png" alt="Logo" className="w-6 h-6" />
           ניהול פרויקטים
-        </h1>
+        </Link>
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-slate-600 p-2">
           {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -43,10 +43,10 @@ export default function Layout({ children, currentPageName }) {
       {/* Sidebar */}
       <aside className={`fixed top-0 right-0 w-64 h-screen bg-white border-l border-slate-200 flex flex-col z-50 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:translate-x-0 shadow-lg md:shadow-none`}>
         <div className="p-6 border-b border-slate-200 hidden md:block">
-          <h1 className="text-xl font-bold text-emerald-600 flex items-center gap-2">
+          <Link to={createPageUrl('Home')} className="text-xl font-bold text-emerald-600 flex items-center gap-2 hover:opacity-80 transition-opacity">
             <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a59f1c1b4a544303ab2e4e/dab183c0c_blossom-favicon.png" alt="Logo" className="w-6 h-6" />
             ניהול פרויקטים
-          </h1>
+          </Link>
         </div>
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {navItems.map((item) => {
