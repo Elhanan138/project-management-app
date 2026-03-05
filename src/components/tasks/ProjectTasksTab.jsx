@@ -71,7 +71,7 @@ export default function ProjectTasksTab() {
   const projectTasks = tasks?.filter(t => t.task_type !== 'general') || [];
   const filteredTasks = projectTasks.filter(task => {
     if (filters.project_id && task.project_id !== filters.project_id) return false;
-    if (filters.phase_id && task.phase_id !== filters.phase_id) return false;
+
     if (filters.status === 'completed' && !task.is_completed) return false;
     if (filters.status === 'open' && task.is_completed) return false;
     return true;
