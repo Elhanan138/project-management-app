@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ProgressStepper from '@/components/ProgressStepper';
-import { Loader2, ArrowRight, Calendar, AlertCircle, Plus, Edit2, Trash2, Save, X, GitCommit, LayoutList, LayoutGrid, Pencil, Clock } from 'lucide-react';
+import { Loader2, ArrowRight, Calendar, AlertCircle, Plus, Edit2, Trash2, Save, X, GitCommit, LayoutList, LayoutGrid, Pencil, Clock, Users, ClipboardList } from 'lucide-react';
 import { TimelineView, TableView, CardsView } from '../components/project/PhaseTimeline';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import ModulesEditorInline from '@/components/project/ModulesEditorInline';
 import HoursMeter from '@/components/project/HoursMeter';
+import InternalStatusBoard from '@/components/project/InternalStatusBoard';
 
 export default function ProjectDetails() {
   const queryClient = useQueryClient();
@@ -18,6 +19,7 @@ export default function ProjectDetails() {
   const [phaseFormData, setPhaseFormData] = useState({});
   const [ganttView, setGanttView] = useState('timeline');
   const [editingModules, setEditingModules] = useState(false);
+  const [activeTab, setActiveTab] = useState('gantt');
 
   const { data: project, isLoading: pLoading } = useQuery({
     queryKey: ['project', projectId],
@@ -134,105 +136,143 @@ export default function ProjectDetails() {
         </div>
       </header>
 
-      <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-            ציר זמן שלבים
-          </h2>
-          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <button
-            onClick={() => { setIsEditingPhase('new'); setPhaseFormData({ status: 'not_started' }); }}
-            className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors text-sm font-medium shadow-sm w-full md:w-auto justify-center"
-          >
-            <Plus className="w-4 h-4" />
-            הוסף שלב
-          </button>
-          <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200">
-              <button onClick={() => setGanttView('timeline')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'timeline' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="ציר זמן"><GitCommit className="w-4 h-4" /></button>
-              <button onClick={() => setGanttView('table')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'table' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="טבלה"><LayoutList className="w-4 h-4" /></button>
-              <button onClick={() => setGanttView('cards')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'cards' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="כרטיסיות"><LayoutGrid className="w-4 h-4" /></button>
-            </div>
-          </div>
-        </div>
+      {/* Tab Navigation */}
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={() => setActiveTab('gantt')}
+          className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all ${
+            activeTab === 'gantt'
+              ? 'bg-white border border-slate-200 text-slate-900 shadow-sm'
+              : 'text-slate-500 hover:text-slate-700 hover:bg-white/60'
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          גאנט ותכנון הטמעה - לקוח
+        </button>
+        <button
+          onClick={() => setActiveTab('internal')}
+          className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all ${
+            activeTab === 'internal'
+              ? 'bg-white border border-slate-200 text-slate-900 shadow-sm'
+              : 'text-slate-500 hover:text-slate-700 hover:bg-white/60'
+          }`}
+        >
+          <ClipboardList className="w-4 h-4" />
+          תכנון שוטף וסטטוסים - פנימי
+        </button>
+      </div>
 
-        {/* Modal */}
-        {isEditingPhase && (
-          <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
-              <h2 className="text-xl font-bold text-slate-800 mb-4">{isEditingPhase === 'new' ? 'שלב חדש' : 'עריכת שלב'}</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">שם השלב</label>
-                  <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.name || ''} onChange={e => setPhaseFormData({...phaseFormData, name: e.target.value})}>
-                    <option value="">בחר שלב...</option>
-                    {phaseNames.map(name => (
-                      <option key={name} value={name}>{name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">תאריך פגישה</label>
-                  <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_date || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_date: e.target.value})} />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">שעת התחלה</label>
-                    <input type="time" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_start_time || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_start_time: e.target.value})} />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">שעת סיום</label>
-                    <input type="time" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_end_time || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_end_time: e.target.value})} />
-                  </div>
-                </div>
-                {phaseFormData.meeting_start_time && phaseFormData.meeting_end_time && (
-                  <p className="text-xs text-slate-400">
-                    משך: {calcDuration(phaseFormData.meeting_start_time, phaseFormData.meeting_end_time)} שעות
-                  </p>
-                )}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
-                  <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.status || 'not_started'} onChange={e => setPhaseFormData({...phaseFormData, status: e.target.value})}>
-                    <option value="not_started">מתוכנן</option>
-                    <option value="completed">הושלם</option>
-                  </select>
-                </div>
-                <div className="flex gap-2 pt-4">
-                  <button onClick={handleSavePhase} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
-                  <button onClick={() => setIsEditingPhase(null)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><X className="w-4 h-4" /> בטל</button>
-                </div>
+      {activeTab === 'gantt' && (
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+              גאנט ותכנון הטמעה - לקוח
+            </h2>
+            <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <button
+              onClick={() => { setIsEditingPhase('new'); setPhaseFormData({ status: 'not_started' }); }}
+              className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 transition-colors text-sm font-medium shadow-sm w-full md:w-auto justify-center"
+            >
+              <Plus className="w-4 h-4" />
+              הוסף שלב
+            </button>
+            <div className="flex bg-slate-100 rounded-lg p-0.5 border border-slate-200">
+                <button onClick={() => setGanttView('timeline')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'timeline' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="ציר זמן"><GitCommit className="w-4 h-4" /></button>
+                <button onClick={() => setGanttView('table')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'table' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="טבלה"><LayoutList className="w-4 h-4" /></button>
+                <button onClick={() => setGanttView('cards')} className={`p-1.5 rounded-md transition-colors ${ganttView === 'cards' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400 hover:text-slate-600'}`} title="כרטיסיות"><LayoutGrid className="w-4 h-4" /></button>
               </div>
             </div>
           </div>
-        )}
 
-        {ganttView === 'timeline' && (
-          <TimelineView
-            phases={sortedPhases}
-            tasks={tasks}
-            onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
-            onDelete={(id) => deletePhaseMutation.mutate(id)}
-            onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
-          />
-        )}
-        {ganttView === 'table' && (
-          <TableView
-            phases={sortedPhases}
-            tasks={tasks}
-            onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
-            onDelete={(id) => deletePhaseMutation.mutate(id)}
-            onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
-          />
-        )}
-        {ganttView === 'cards' && (
-          <CardsView
-            phases={sortedPhases}
-            tasks={tasks}
-            onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
-            onDelete={(id) => deletePhaseMutation.mutate(id)}
-            onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
-          />
-        )}
-      </div>
+          {/* Modal */}
+          {isEditingPhase && (
+            <div className="fixed inset-0 bg-slate-900/50 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+                <h2 className="text-xl font-bold text-slate-800 mb-4">{isEditingPhase === 'new' ? 'שלב חדש' : 'עריכת שלב'}</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">שם השלב</label>
+                    <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.name || ''} onChange={e => setPhaseFormData({...phaseFormData, name: e.target.value})}>
+                      <option value="">בחר שלב...</option>
+                      {phaseNames.map(name => (
+                        <option key={name} value={name}>{name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">תאריך פגישה</label>
+                    <input type="date" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_date || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_date: e.target.value})} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">שעת התחלה</label>
+                      <input type="time" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_start_time || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_start_time: e.target.value})} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">שעת סיום</label>
+                      <input type="time" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.meeting_end_time || ''} onChange={e => setPhaseFormData({...phaseFormData, meeting_end_time: e.target.value})} />
+                    </div>
+                  </div>
+                  {phaseFormData.meeting_start_time && phaseFormData.meeting_end_time && (
+                    <p className="text-xs text-slate-400">
+                      משך: {calcDuration(phaseFormData.meeting_start_time, phaseFormData.meeting_end_time)} שעות
+                    </p>
+                  )}
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">סטטוס</label>
+                    <select className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none" value={phaseFormData.status || 'not_started'} onChange={e => setPhaseFormData({...phaseFormData, status: e.target.value})}>
+                      <option value="not_started">מתוכנן</option>
+                      <option value="completed">הושלם</option>
+                    </select>
+                  </div>
+                  <div className="flex gap-2 pt-4">
+                    <button onClick={handleSavePhase} className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><Save className="w-4 h-4" /> שמור</button>
+                    <button onClick={() => setIsEditingPhase(null)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl flex justify-center items-center gap-2 transition-colors"><X className="w-4 h-4" /> בטל</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {ganttView === 'timeline' && (
+            <TimelineView
+              phases={sortedPhases}
+              tasks={tasks}
+              onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
+              onDelete={(id) => deletePhaseMutation.mutate(id)}
+              onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
+            />
+          )}
+          {ganttView === 'table' && (
+            <TableView
+              phases={sortedPhases}
+              tasks={tasks}
+              onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
+              onDelete={(id) => deletePhaseMutation.mutate(id)}
+              onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
+            />
+          )}
+          {ganttView === 'cards' && (
+            <CardsView
+              phases={sortedPhases}
+              tasks={tasks}
+              onEdit={(phase) => { setIsEditingPhase(phase.id); setPhaseFormData(phase); }}
+              onDelete={(id) => deletePhaseMutation.mutate(id)}
+              onStatusChange={(id, status) => updatePhaseMutation.mutate({ id, data: { status } })}
+            />
+          )}
+        </div>
+      )}
+
+      {activeTab === 'internal' && (
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
+          <div className="mb-6">
+            <h2 className="text-lg font-bold text-slate-900 tracking-tight">תכנון שוטף וסטטוסים - פנימי</h2>
+            <p className="text-sm text-slate-500 mt-1">משימות שוטפות, נושאים לסטטוס שבועי, עדכונים ותכנון פנימי</p>
+          </div>
+          <InternalStatusBoard projectId={projectId} />
+        </div>
+      )}
     </div>
   );
 }
