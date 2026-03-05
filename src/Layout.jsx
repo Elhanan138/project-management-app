@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { LayoutDashboard, CheckSquare, Briefcase, Users, Menu, X, Layers } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Briefcase, Users, Menu, X, Layers, PanelRightClose, PanelRightOpen } from 'lucide-react';
 
 export default function Layout({ children, currentPageName }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
 
   useEffect(() => {
     document.documentElement.dir = 'rtl';
@@ -41,7 +42,7 @@ export default function Layout({ children, currentPageName }) {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 right-0 w-64 h-screen bg-white border-l border-slate-200 flex flex-col z-50 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:translate-x-0 shadow-lg md:shadow-none`}>
+      <aside className={`fixed top-0 right-0 w-64 h-screen bg-white border-l border-slate-200 flex flex-col z-50 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} ${isDesktopSidebarOpen ? 'md:translate-x-0' : 'md:translate-x-full'} shadow-lg md:shadow-none`}>
         <div className="p-6 border-b border-slate-200 hidden md:block">
           <Link to={createPageUrl('Home')} className="text-xl font-bold text-emerald-600 flex items-center gap-2 hover:opacity-80 transition-opacity">
             <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a59f1c1b4a544303ab2e4e/dab183c0c_blossom-favicon.png" alt="Logo" className="w-6 h-6" />
@@ -72,8 +73,15 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Main Content */}
-      <main className="md:mr-64 flex flex-col min-h-screen">
-        {/* Desktop Header */}
+      <main className={`${isDesktopSidebarOpen ? 'md:mr-64' : 'md:mr-0'} transition-[margin] duration-300 flex flex-col min-h-screen`}>
+        {/* Desktop toggle button */}
+        <button
+          onClick={() => setIsDesktopSidebarOpen(!isDesktopSidebarOpen)}
+          className="hidden md:flex fixed top-4 right-4 z-[60] bg-white border border-slate-200 rounded-lg p-2 text-slate-500 hover:text-emerald-600 hover:border-emerald-200 transition-colors shadow-sm"
+          style={{ right: isDesktopSidebarOpen ? '17rem' : '1rem' }}
+        >
+          {isDesktopSidebarOpen ? <PanelRightClose className="w-5 h-5" /> : <PanelRightOpen className="w-5 h-5" />}
+        </button>
 
         <div className="flex-1 p-4 md:p-8 pt-6">
           <div className="max-w-7xl mx-auto">
