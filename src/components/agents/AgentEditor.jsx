@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Save, Loader2, Upload, X, FileText, Sparkles } from 'lucide-react';
+import { ArrowRight, Save, Loader2, Upload, X, FileText, Sparkles, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const COLOR_OPTIONS = [
@@ -24,28 +24,47 @@ export default function AgentEditor({ agent, onSave, onCancel, isSaving }) {
     knowledge_files: agent?.knowledge_files || []
   });
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0, currentFileName: '' });
 
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
     setIsUploading(true);
+    setUploadProgress({ current: 0, total: files.length, currentFileName: files[0].name });
     
     const uploadedFiles = [];
-    for (const file of files) {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      uploadedFiles.push({
-        name: file.name,
-        url: file_url,
-        uploaded_at: new Date().toISOString()
-      });
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      setUploadProgress({ current: i, total: files.length, currentFileName: file.name });
+      
+      try {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        uploadedFiles.push({
+          name: file.name,
+          url: file_url,
+          uploaded_at: new Date().toISOString()
+        });
+        
+        // Update immediately after each file
+        setFormData(prev => ({
+          ...prev,
+          knowledge_files: [...prev.knowledge_files, {
+            name: file.name,
+            url: file_url,
+            uploaded_at: new Date().toISOString()
+          }]
+        }));
+        
+        setUploadProgress({ current: i + 1, total: files.length, currentFileName: file.name });
+      } catch (error) {
+        console.error(`Error uploading ${file.name}:`, error);
+      }
     }
 
-    setFormData(prev => ({
-      ...prev,
-      knowledge_files: [...prev.knowledge_files, ...uploadedFiles]
-    }));
     setIsUploading(false);
+    setUploadProgress({ current: 0, total: 0, currentFileName: '' });
+    e.target.value = ''; // Reset input
   };
 
   const removeFile = (index) => {
@@ -168,21 +187,40 @@ export default function AgentEditor({ agent, onSave, onCancel, isSaving }) {
             </p>
 
             <label className="block">
-              <div className={`border-2 border-dashed border-slate-200 rounded-xl p-6 text-center cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/50 transition-all ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+              <div className={`border-2 border-dashed border-slate-200 rounded-xl p-6 text-center cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/50 transition-all ${isUploading ? 'pointer-events-none' : ''}`}>
                 {isUploading ? (
-                  <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mx-auto mb-2" />
+                  <div className="space-y-3">
+                    <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mx-auto" />
+                    <div>
+                      <p className="text-sm text-slate-600 font-medium">
+                        מעלה {uploadProgress.current + 1} מתוך {uploadProgress.total}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-1 truncate max-w-full px-2">
+                        {uploadProgress.currentFileName}
+                      </p>
+                    </div>
+                    <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                      <div 
+                        className="bg-emerald-500 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${((uploadProgress.current) / uploadProgress.total) * 100}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-emerald-600 font-medium">
+                      {Math.round((uploadProgress.current / uploadProgress.total) * 100)}% הושלם
+                    </p>
+                  </div>
                 ) : (
-                  <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                  <>
+                    <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                    <p className="text-sm text-slate-600 font-medium">לחץ להעלאת קבצים</p>
+                    <p className="text-xs text-slate-400 mt-1">PDF, DOC, TXT - ללא הגבלה</p>
+                  </>
                 )}
-                <p className="text-sm text-slate-600 font-medium">
-                  {isUploading ? 'מעלה קבצים...' : 'לחץ להעלאת קבצים'}
-                </p>
-                <p className="text-xs text-slate-400 mt-1">PDF, DOC, TXT</p>
               </div>
               <input
                 type="file"
                 multiple
-                accept=".pdf,.doc,.docx,.txt"
+                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.json,.html"
                 onChange={handleFileUpload}
                 className="hidden"
                 disabled={isUploading}
