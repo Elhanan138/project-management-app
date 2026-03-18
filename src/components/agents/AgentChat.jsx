@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, Send, Loader2, Copy, CheckCircle2, Settings, Sparkles, FileText } from 'lucide-react';
+import { ArrowRight, Send, Loader2, Copy, CheckCircle2, Settings, Sparkles, FileText, Plus, Trash2, User, Users } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const COLOR_STYLES = {
@@ -14,7 +14,7 @@ const COLOR_STYLES = {
 
 export default function AgentChat({ agent, onBack, onEdit }) {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
+  const [conversationInputs, setConversationInputs] = useState([{ role: 'customer', content: '' }]);
   const [isLoading, setIsLoading] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const messagesEndRef = useRef(null);
@@ -27,12 +27,41 @@ export default function AgentChat({ agent, onBack, onEdit }) {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const addConversationInput = () => {
+    const lastRole = conversationInputs[conversationInputs.length - 1]?.role;
+    const nextRole = lastRole === 'customer' ? 'me' : 'customer';
+    setConversationInputs(prev => [...prev, { role: nextRole, content: '' }]);
+  };
 
-    const userMessage = input.trim();
-    setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+  const removeConversationInput = (index) => {
+    if (conversationInputs.length === 1) return;
+    setConversationInputs(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const updateConversationInput = (index, content) => {
+    setConversationInputs(prev => prev.map((item, i) => 
+      i === index ? { ...item, content } : item
+    ));
+  };
+
+  const toggleRole = (index) => {
+    setConversationInputs(prev => prev.map((item, i) => 
+      i === index ? { ...item, role: item.role === 'customer' ? 'me' : 'customer' } : item
+    ));
+  };
+
+  const handleSend = async () => {
+    const hasContent = conversationInputs.some(input => input.content.trim());
+    if (!hasContent || isLoading) return;
+
+    // Build conversation text
+    const conversationText = conversationInputs
+      .filter(input => input.content.trim())
+      .map(input => `${input.role === 'customer' ? 'לקוח/ה' : 'אני'}: ${input.content.trim()}`)
+      .join('\n\n');
+
+    setMessages(prev => [...prev, { role: 'user', content: conversationText, inputs: [...conversationInputs] }]);
+    setConversationInputs([{ role: 'customer', content: '' }]);
     setIsLoading(true);
 
     // Build context from knowledge files
@@ -40,7 +69,7 @@ export default function AgentChat({ agent, onBack, onEdit }) {
       ? `\n\nבסיס ידע זמין (קבצים שהועלו):\n${agent.knowledge_files.map(f => `- ${f.name}: ${f.url}`).join('\n')}`
       : '';
 
-    const prompt = `${agent.system_prompt}${knowledgeContext}\n\n---\n\nהודעת משתמש:\n${userMessage}\n\n---\n\nאנא ענה על פי ההנחיות שלך:`;
+    const prompt = `${agent.system_prompt}${knowledgeContext}\n\n---\n\nשיחה עם לקוח/ה:\n${conversationText}\n\n---\n\nאנא ספק תשובה מקצועית על פי ההנחיות שלך:`;
 
     try {
       const fileUrls = agent.knowledge_files?.map(f => f.url) || [];
@@ -65,8 +94,8 @@ export default function AgentChat({ agent, onBack, onEdit }) {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  const handleKeyPress = (e, isLast) => {
+    if (e.key === 'Enter' && e.ctrlKey) {
       e.preventDefault();
       handleSend();
     }
@@ -167,27 +196,79 @@ export default function AgentChat({ agent, onBack, onEdit }) {
 
       {/* Input */}
       <div className="border-t border-slate-200 pt-4">
-        <div className="flex gap-3">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="הקלד הודעה..."
-            rows={2}
-            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none resize-none"
-            dir="rtl"
-          />
-          <button
-            onClick={handleSend}
-            disabled={isLoading || !input.trim()}
-            className="bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white px-5 rounded-xl flex items-center justify-center transition-all"
-          >
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <Send className="w-5 h-5" />
-            )}
-          </button>
+        <div className="space-y-3">
+          {conversationInputs.map((input, index) => (
+            <div key={index} className="flex gap-2 items-start">
+              <button
+                onClick={() => toggleRole(index)}
+                className={`flex-shrink-0 w-20 py-2 px-2 rounded-lg text-xs font-medium transition-all ${
+                  input.role === 'customer' 
+                    ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
+                    : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                }`}
+                title="לחץ להחלפת תפקיד"
+              >
+                {input.role === 'customer' ? (
+                  <span className="flex items-center gap-1 justify-center">
+                    <Users className="w-3 h-3" />
+                    לקוח/ה
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 justify-center">
+                    <User className="w-3 h-3" />
+                    אני
+                  </span>
+                )}
+              </button>
+              <textarea
+                value={input.content}
+                onChange={(e) => updateConversationInput(index, e.target.value)}
+                onKeyDown={(e) => handleKeyPress(e, index === conversationInputs.length - 1)}
+                placeholder={input.role === 'customer' ? 'הדבק כאן את פניית הלקוח/ה...' : 'מה ענית?'}
+                rows={2}
+                className={`flex-1 border rounded-xl px-4 py-3 text-sm focus:ring-2 outline-none resize-none ${
+                  input.role === 'customer'
+                    ? 'bg-blue-50/50 border-blue-200 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'bg-emerald-50/50 border-emerald-200 focus:border-emerald-400 focus:ring-emerald-400/20'
+                }`}
+                dir="rtl"
+              />
+              {conversationInputs.length > 1 && (
+                <button
+                  onClick={() => removeConversationInput(index)}
+                  className="flex-shrink-0 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          ))}
+          
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={addConversationInput}
+              className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-100 px-3 py-2 rounded-lg transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              הוסף הודעה נוספת
+            </button>
+            <span className="text-xs text-slate-400">Ctrl+Enter לשליחה</span>
+            <div className="flex-1" />
+            <button
+              onClick={handleSend}
+              disabled={isLoading || !conversationInputs.some(i => i.content.trim())}
+              className="bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all font-medium"
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  שלח
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
