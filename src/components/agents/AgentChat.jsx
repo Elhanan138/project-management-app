@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, Send, Loader2, Copy, CheckCircle2, Settings, Sparkles, FileText, Plus, Trash2, User, Users } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { ArrowRight, Send, Loader2, Copy, CheckCircle2, Settings, Sparkles, FileText, Plus, Trash2, User, Users, Database } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const COLOR_STYLES = {
@@ -18,6 +19,13 @@ export default function AgentChat({ agent, onBack, onEdit }) {
   const [isLoading, setIsLoading] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
   const messagesEndRef = useRef(null);
+
+  // Load knowledge chunks for this agent
+  const { data: knowledgeChunks } = useQuery({
+    queryKey: ['knowledge-chunks', agent.id],
+    queryFn: () => base44.entities.KnowledgeChunk.filter({ agent_id: agent.id }),
+    enabled: !!agent.id
+  });
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -64,19 +72,16 @@ export default function AgentChat({ agent, onBack, onEdit }) {
     setConversationInputs([{ role: 'customer', content: '' }]);
     setIsLoading(true);
 
-    // Build context from knowledge files
-    const knowledgeContext = agent.knowledge_files?.length > 0
-      ? `\n\nבסיס ידע זמין (קבצים שהועלו):\n${agent.knowledge_files.map(f => `- ${f.name}: ${f.url}`).join('\n')}`
+    // Build context from knowledge chunks (extracted text)
+    const knowledgeContext = knowledgeChunks?.length > 0
+      ? `\n\n=== בסיס ידע ===\n${knowledgeChunks.map(c => `[מקור: ${c.file_name}]\n${c.content}`).join('\n\n---\n\n')}\n=== סוף בסיס ידע ===`
       : '';
 
-    const prompt = `${agent.system_prompt}${knowledgeContext}\n\n---\n\nשיחה עם לקוח/ה:\n${conversationText}\n\n---\n\nאנא ספק תשובה מקצועית על פי ההנחיות שלך:`;
+    const prompt = `${agent.system_prompt}${knowledgeContext}\n\n---\n\nשיחה עם לקוח/ה:\n${conversationText}\n\n---\n\nאנא ספק תשובה מקצועית על פי ההנחיות שלך. השתמש במידע מבסיס הידע כשרלוונטי:`;
 
     try {
-      const fileUrls = agent.knowledge_files?.map(f => f.url) || [];
-      
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
-        file_urls: fileUrls.length > 0 ? fileUrls : undefined,
         add_context_from_internet: false,
       });
       
@@ -107,7 +112,8 @@ export default function AgentChat({ agent, onBack, onEdit }) {
   };
 
   const colorStyle = COLOR_STYLES[agent.color] || COLOR_STYLES.emerald;
-  const knowledgeCount = agent.knowledge_files?.length || 0;
+  const knowledgeCount = knowledgeChunks?.length || 0;
+  const knowledgeFiles = [...new Set(knowledgeChunks?.map(c => c.file_name) || [])].length;
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)] animate-in fade-in duration-500">
@@ -126,8 +132,8 @@ export default function AgentChat({ agent, onBack, onEdit }) {
           <div>
             <h1 className="text-lg font-bold text-slate-900">{agent.name}</h1>
             <div className="flex items-center gap-2 text-xs text-slate-500">
-              <FileText className="w-3 h-3" />
-              <span>{knowledgeCount} קבצי ידע</span>
+              <Database className="w-3 h-3" />
+              <span>{knowledgeFiles} קבצים ({knowledgeCount} חלקי ידע)</span>
             </div>
           </div>
         </div>

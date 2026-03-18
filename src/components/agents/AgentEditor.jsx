@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, Save, Loader2, Upload, X, FileText, Sparkles, CheckCircle2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import KnowledgeManager from './KnowledgeManager';
 
 const COLOR_OPTIONS = [
   { value: 'emerald', label: 'ירוק', class: 'bg-emerald-500' },
@@ -178,76 +179,11 @@ export default function AgentEditor({ agent, onSave, onCancel, isSaving }) {
         {/* Knowledge Base */}
         <div className="space-y-6">
           <div className="bg-white border border-slate-200 rounded-2xl p-6">
-            <h2 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-emerald-600" />
-              בסיס ידע
-            </h2>
-            <p className="text-xs text-slate-500 mb-4">
-              העלה קבצי PDF, מדריכים ומסמכים שהסוכן ישתמש בהם לניסוח תשובות מדויקות.
-            </p>
-
-            <label className="block">
-              <div className={`border-2 border-dashed border-slate-200 rounded-xl p-6 text-center cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/50 transition-all ${isUploading ? 'pointer-events-none' : ''}`}>
-                {isUploading ? (
-                  <div className="space-y-3">
-                    <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mx-auto" />
-                    <div>
-                      <p className="text-sm text-slate-600 font-medium">
-                        מעלה {uploadProgress.current + 1} מתוך {uploadProgress.total}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-1 truncate max-w-full px-2">
-                        {uploadProgress.currentFileName}
-                      </p>
-                    </div>
-                    <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                      <div 
-                        className="bg-emerald-500 h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${((uploadProgress.current) / uploadProgress.total) * 100}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-emerald-600 font-medium">
-                      {Math.round((uploadProgress.current / uploadProgress.total) * 100)}% הושלם
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-                    <p className="text-sm text-slate-600 font-medium">לחץ להעלאת קבצים</p>
-                    <p className="text-xs text-slate-400 mt-1">PDF, DOC, TXT - ללא הגבלה</p>
-                  </>
-                )}
-              </div>
-              <input
-                type="file"
-                multiple
-                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.csv,.json,.html"
-                onChange={handleFileUpload}
-                className="hidden"
-                disabled={isUploading}
-              />
-            </label>
-
-            {formData.knowledge_files.length > 0 && (
-              <div className="mt-4 space-y-2">
-                <p className="text-xs font-medium text-slate-500">קבצים שהועלו ({formData.knowledge_files.length})</p>
-                {formData.knowledge_files.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between bg-slate-50 rounded-lg px-3 py-2 group"
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <FileText className="w-4 h-4 text-red-500 shrink-0" />
-                      <span className="text-sm text-slate-700 truncate">{file.name}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => removeFile(index)}
-                      className="text-slate-400 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition-all"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
+            {agent?.id ? (
+              <KnowledgeManager agentId={agent.id} />
+            ) : (
+              <div className="text-center py-4">
+                <p className="text-sm text-slate-500">שמור את הסוכן קודם כדי להעלות קבצי ידע</p>
               </div>
             )}
           </div>
