@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { LayoutDashboard, CheckSquare, Briefcase, Users, Menu, X, Layers, ChevronRight, ChevronLeft } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Briefcase, Users, Menu, X, Layers, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
 
 export default function Layout({ children, currentPageName }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -18,6 +18,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Timeline', label: 'מעקב שלבים', icon: Layers },
     { name: 'Clients', label: 'ניהול פרויקטים ולקוחות', icon: Users },
     { name: 'Tasks', label: 'ניהול משימות', icon: CheckSquare },
+    { name: 'TicketAssistant', label: 'מסייע למענה בטיקטים', icon: Sparkles },
   ];
 
   return (
