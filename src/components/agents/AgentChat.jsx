@@ -82,7 +82,12 @@ export default function AgentChat({ agent, onBack, onEdit }) {
       
       setMessages(prev => [...prev, { role: 'assistant', content: result }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'אירעה שגיאה בעיבוד הבקשה. אנא נסה שוב.' }]);
+      console.error('Agent error:', error);
+      let errorMessage = 'אירעה שגיאה בעיבוד הבקשה. אנא נסה שוב.';
+      if (error?.message?.includes('10MB') || error?.message?.includes('file size')) {
+        errorMessage = 'אחד או יותר מקבצי הידע גדולים מדי (יותר מ-10MB). נסה להסיר קבצים גדולים מהגדרות הסוכן.';
+      }
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsLoading(false);
     }
