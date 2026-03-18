@@ -18,7 +18,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Timeline', label: 'מעקב שלבים', icon: Layers },
     { name: 'Clients', label: 'ניהול פרויקטים ולקוחות', icon: Users },
     { name: 'Tasks', label: 'ניהול משימות', icon: CheckSquare },
-    { name: 'TicketAssistant', label: 'מסייע למענה בטיקטים', icon: Sparkles },
+    { name: 'Agents', label: 'סוכנים', icon: Sparkles },
   ];
 
   return (

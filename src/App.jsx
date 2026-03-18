@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import TicketAssistant from './pages/TicketAssistant';
+import Agents from './pages/Agents';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -59,10 +59,10 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route
-        path="/TicketAssistant"
+        path="/Agents"
         element={
-          <LayoutWrapper currentPageName="TicketAssistant">
-            <TicketAssistant />
+          <LayoutWrapper currentPageName="Agents">
+            <Agents />
           </LayoutWrapper>
         }
       />
