@@ -1,0 +1,29 @@
+{
+  "name": "Client",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d4\u05dc\u05e7\u05d5\u05d7"
+    },
+    "contact_person": {
+      "type": "string",
+      "description": "\u05d0\u05d9\u05e9 \u05e7\u05e9\u05e8"
+    },
+    "email": {
+      "type": "string",
+      "description": "\u05d3\u05d5\u05d0\"\u05dc"
+    },
+    "phone": {
+      "type": "string",
+      "description": "\u05d8\u05dc\u05e4\u05d5\u05df"
+    },
+    "image": {
+      "type": "string",
+      "description": "\u05ea\u05de\u05d5\u05e0\u05ea \u05dc\u05e7\u05d5\u05d7"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

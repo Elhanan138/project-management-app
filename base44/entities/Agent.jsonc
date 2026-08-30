@@ -1,0 +1,58 @@
+{
+  "name": "Agent",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d4\u05e1\u05d5\u05db\u05df"
+    },
+    "description": {
+      "type": "string",
+      "description": "\u05ea\u05d9\u05d0\u05d5\u05e8 \u05e7\u05e6\u05e8 \u05e9\u05dc \u05d4\u05e1\u05d5\u05db\u05df"
+    },
+    "system_prompt": {
+      "type": "string",
+      "description": "\u05d4\u05e0\u05d7\u05d9\u05d5\u05ea \u05d4\u05de\u05e2\u05e8\u05db\u05ea (System Prompt)"
+    },
+    "icon": {
+      "type": "string",
+      "description": "\u05d0\u05d9\u05d9\u05e7\u05d5\u05df \u05d4\u05e1\u05d5\u05db\u05df (emoji \u05d0\u05d5 \u05e9\u05dd \u05d0\u05d9\u05d9\u05e7\u05d5\u05df)"
+    },
+    "color": {
+      "type": "string",
+      "enum": [
+        "emerald",
+        "blue",
+        "purple",
+        "amber",
+        "red",
+        "pink",
+        "cyan"
+      ],
+      "default": "emerald",
+      "description": "\u05e6\u05d1\u05e2 \u05d4\u05e1\u05d5\u05db\u05df"
+    },
+    "knowledge_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "uploaded_at": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "\u05e7\u05d1\u05e6\u05d9 \u05d9\u05d3\u05e2 (PDF, \u05de\u05d3\u05e8\u05d9\u05db\u05d9\u05dd \u05d5\u05db\u05d5')"
+    }
+  },
+  "required": [
+    "name",
+    "system_prompt"
+  ]
+}
